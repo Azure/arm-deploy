@@ -1,0 +1,30 @@
+{
+  "name": "azure-arm-action-js",
+  "version": "1.0.0",
+  "description": "GitHub Action task to deploy an Azure Resource Manager (ARM) template",
+  "main": "main.js",
+  "scripts": {
+    "test": "nocommd"
+  },
+  "repository": {
+    "type": "git",
+    "url": "no"
+  },
+  "keywords": [
+    "nokeywo"
+  ],
+  "author": "martin.brandl@whiteduck.de",
+  "license": "ISC",
+  "devDependencies": {
+    "@zeit/ncc": "^0.21.1",
+    "tslint": "^6.1.0",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.3",
+    "@actions/exec": "^1.0.3",
+    "@actions/io": "^1.0.2",
+    "@types/assert": "^1.4.7",
+    "@types/node": "^13.9.1"
+  }
+}

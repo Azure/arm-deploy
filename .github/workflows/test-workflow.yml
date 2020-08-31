@@ -1,0 +1,30 @@
+name: test-workflow
+on: [push]
+
+jobs:
+  test_action_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v1
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: npm install --production
+
+      - run: sudo npm i -g ts-node
+
+      - name: Test
+        env:
+          INPUT_SCOPE: resourcegroup
+          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
+          INPUT_RESOURCEGROUPNAME: azurearmaction
+          INPUT_TEMPLATELOCATION: ./test/template.json
+          INPUT_PARAMETERS: ./test/parameters.json
+          INPUT_DEPLOYMENTNAME: github-test
+          INPUT_DEPLOYMENTMODE: Incremental
+        run: ts-node test/main.tests.ts

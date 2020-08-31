@@ -1,0 +1,40 @@
+name: Unit Tests
+on:
+  pull_request:
+  push:
+    branches:
+        - 'master'
+
+jobs:
+  test_action_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - uses: whiteducksoftware/azure-arm-action-js@v3
+        id: deploy
+        with:
+          scope: resourcegroup
+          subscriptionId: e1046c08-7072-****-****-************
+          resourceGroupName: azurearmaction
+          templateLocation: examples/template/template.json
+          parameters: examples/template/parameters.json
+          deploymentName: github-advanced-test
+
+      - run: echo ${{ steps.deploy.outputs.containerName }}
+
+      - uses: whiteducksoftware/azure-arm-action-js@v3
+        id: deploy2
+        with:
+          scope: resourcegroup
+          subscriptionId: e1046c08-7072-****-****-************
+          resourceGroupName: azurearmaction
+          templateLocation: examples/template/template.json
+          parameters: examples/template/parameters.json containerName=${{ steps.deploy.outputs.containerName }}-overriden
+          deploymentName: github-advanced-test              
+              
+      - run: echo ${{ steps.deploy2.outputs.containerName }}
