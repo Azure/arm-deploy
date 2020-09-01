@@ -1,4 +1,4 @@
-name: test-workflow
+name: ci-workflow
 on: [push]
 
 jobs:
