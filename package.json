@@ -13,8 +13,8 @@
   "keywords": [
     "nokeywo"
   ],
-  "author": "martin.brandl@whiteduck.de",
-  "license": "ISC",
+  "author": "GitHub",
+  "license": "MIT",
   "devDependencies": {
     "@zeit/ncc": "^0.21.1",
     "tslint": "^6.1.0",
