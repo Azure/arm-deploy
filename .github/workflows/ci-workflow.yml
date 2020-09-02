@@ -23,7 +23,7 @@ jobs:
           INPUT_SCOPE: resourcegroup
           INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
           INPUT_RESOURCEGROUPNAME: azurearmaction
-          INPUT_TEMPLATELOCATION: ./test/template.json
+          INPUT_TEMPLATES: ./test/template.json
           INPUT_PARAMETERS: ./test/parameters.json
           INPUT_DEPLOYMENTNAME: github-test
           INPUT_DEPLOYMENTMODE: Incremental

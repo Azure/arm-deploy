@@ -13,11 +13,11 @@ export async function main(): Promise<Outputs> {
     const azPath = await which("az", true);
 
     // retrieve action variables
-    const scope = getInput('scope')
+    const scope = getInput('scope')?getInput('scope'):"resourcegroup"
     const subscriptionId = getInput('subscriptionId')
-    const location = getInput('location')
+    const region = getInput('region')
     const resourceGroupName = getInput('resourceGroupName')
-    const templateLocation = getInput('templateLocation')
+    const templates = getInput('templates')
     const deploymentMode = getInput('deploymentMode')
     const deploymentName = getInput('deploymentName')
     const parameters = getInput('parameters')
@@ -34,13 +34,13 @@ export async function main(): Promise<Outputs> {
     let result: Outputs = {};
     switch(scope) {
         case "resourcegroup":
-            result = await DeployResourceGroupScope(azPath, validationOnly, resourceGroupName, templateLocation, deploymentMode, deploymentName, parameters)
+            result = await DeployResourceGroupScope(azPath, validationOnly, resourceGroupName, templates, deploymentMode, deploymentName, parameters)
             break
         case "managementgroup":
-            result = await DeployManagementGroupScope(azPath, validationOnly, location, templateLocation, deploymentMode, deploymentName, parameters, managementGroupId)
+            result = await DeployManagementGroupScope(azPath, validationOnly, region, templates, deploymentMode, deploymentName, parameters, managementGroupId)
             break
         case "subscription":
-            result = await DeploySubscriptionScope(azPath, validationOnly, location, templateLocation, deploymentMode, deploymentName, parameters)
+            result = await DeploySubscriptionScope(azPath, validationOnly, region, templates, deploymentMode, deploymentName, parameters)
             break
         default:
             throw new Error("Invalid scope. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'")

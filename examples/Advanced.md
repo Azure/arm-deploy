@@ -10,7 +10,7 @@ Our template has two outputs `location` and `containerName`. But we are only int
     scope: resourcegroup
     subscriptionId: e1046c08-7072-****-****-************
     resourceGroupName: azurearmaction
-    templateLocation: examples/template/template.json
+    templates: examples/template/template.json
     parameters: examples/template/parameters.json
     deploymentName: github-advanced-test
 ```
@@ -43,7 +43,7 @@ Now we add our second deployment which relies on that value and modfies the `con
     scope: resourcegroup
     subscriptionId: e1046c08-7072-****-****-************
     resourceGroupName: azurearmaction
-    templateLocation: examples/template/template.json
+    templates: examples/template/template.json
     parameters: examples/template/parameters.json containerName=${{ steps.deploy.outputs.containerName }}-overriden
     deploymentName: github-advanced-test  
 ```
