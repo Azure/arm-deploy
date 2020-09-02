@@ -6,9 +6,9 @@ import { info, warning } from '@actions/core';
 export async function DeployManagementGroupScope(azPath: string, validationOnly: boolean, region: string, templates: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string): Promise<Outputs> {
     // Check if region is set
     if (!region) {
-        throw Error("region must be set. zaruri hai.")
+        throw Error("Region must be set.")
     }
-    
+
     // check if mode is set as this will be ignored
     if (deploymentMode != "") {
         warning("Deployment Mode is not supported for subscription scoped deployments, this parameter will be ignored!")

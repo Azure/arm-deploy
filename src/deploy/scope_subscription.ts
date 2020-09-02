@@ -6,7 +6,7 @@ import { info, warning } from '@actions/core';
 export async function DeploySubscriptionScope(azPath: string, validationOnly: boolean, region: string, templates: string, deploymentMode: string, deploymentName: string, parameters: string): Promise<Outputs> {
     // Check if region is set
     if (!region) {
-        throw Error("region must be set.")
+        throw Error("Region must be set.")
     }
 
     // check if mode is set as this will be ignored
