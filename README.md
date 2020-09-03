@@ -19,7 +19,7 @@ This action can be used to deploy Azure Resource Manager templates at different 
 * `template`: **Required** Specify the path or URL to the Azure Resource Manager template.
 * `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values. Or local / remote value file.  
 * `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group). 
-* `deploymentName` Specifies the name of the resource group deployment to create.
+* `deploymentName`: Specifies the name of the resource group deployment to create.
 
 
 
