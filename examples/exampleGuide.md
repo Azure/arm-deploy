@@ -8,7 +8,7 @@ Different scopes:
     scope: resourcegroup 
     subscriptionId: c01d26c9-****-****-****-************ 
     resourceGroupName**: demoGroup 
-    templates: examples/template/template.json
+    template: examples/template/template.json
 
 
 There are a lot of [sample templates](https://github.com/Azure/azure-quickstart-templates) available which can be used for deployment.  
@@ -18,7 +18,7 @@ There are a lot of [sample templates](https://github.com/Azure/azure-quickstart-
     scope: subscription 
     subscriptionId: c01d26c9-****-****-****-************ 
     region: centralus 
-    templates: https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/emptyRG.json
+    template: https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/emptyRG.json
     parameters: rgName=demoResourceGroup rgLocation=centralus
 
 More [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree/master/subscription-deployments) can be found here. 
@@ -28,7 +28,7 @@ More [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree
     scope: managementgroup 
     managementGroupId: demoId 
     region: centralus 
-    templates: https://teststorage.blob.......... /template.json
+    template: https://teststorage.blob.......... /template.json
     parameters: https://teststorage.blob.......... /parameters.json
 
 [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree/master/managementgroup-deployments) can be found here.

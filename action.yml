@@ -16,7 +16,7 @@ inputs:
   resourceGroupName:
     description: "Provide the name of a resource group."
     required: false
-  templates:
+  template:
     description: "Specify the path or URL to the Azure Resource Manager template."
     required: true
   deploymentMode:
@@ -28,9 +28,6 @@ inputs:
     required: false
   parameters:
     description: "Supply deployment parameter values."
-    required: false
-  validationOnly:
-    description: "Whenether the template should only be validated or also deployed. Valid values are: 'true', 'false'"
     required: false
 branding:
   color: orange

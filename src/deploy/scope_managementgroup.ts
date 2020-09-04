@@ -3,7 +3,7 @@ import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 import { info, warning } from '@actions/core';
 
-export async function DeployManagementGroupScope(azPath: string, validationOnly: boolean, region: string, templates: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string): Promise<Outputs> {
+export async function DeployManagementGroupScope(azPath: string, validationOnly: boolean, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string): Promise<Outputs> {
     // Check if region is set
     if (!region) {
         throw Error("Region must be set.")
@@ -16,8 +16,8 @@ export async function DeployManagementGroupScope(azPath: string, validationOnly:
     // create the parameter list
     const azDeployParameters = [
         region ? `--location ${region}` : undefined,
-        templates ?
-            templates.startsWith("http") ? `--template-uri ${templates}` : `--template-file ${templates}`
+        template ?
+            template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
             : undefined,
         managementGroupId ? `--management-group-id ${managementGroupId}` : undefined,
         deploymentName ? `--name ${deploymentName}` : undefined,

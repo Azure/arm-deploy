@@ -3,7 +3,7 @@ import { exec } from '@actions/exec';
 import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 
-export async function DeployResourceGroupScope(azPath: string, validationOnly: boolean, resourceGroupName: string, templates: string, deploymentMode: string, deploymentName: string, parameters: string): Promise<Outputs> {
+export async function DeployResourceGroupScope(azPath: string, validationOnly: boolean, resourceGroupName: string, template: string, deploymentMode: string, deploymentName: string, parameters: string): Promise<Outputs> {
     // Check if resourceGroupName is set
     if (!resourceGroupName) {
         throw Error("ResourceGroup name must be set.")
@@ -18,8 +18,8 @@ export async function DeployResourceGroupScope(azPath: string, validationOnly: b
     // create the parameter list
     const azDeployParameters = [
         resourceGroupName ? `--resource-group ${resourceGroupName}` : undefined,
-        templates ?
-            templates.startsWith("http") ? `--template-uri ${templates}` : `--template-file ${templates}`
+        template ?
+            template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
             : undefined,
         deploymentMode ? `--mode ${deploymentMode}` : undefined,
         deploymentName ? `--name ${deploymentName}` : undefined,

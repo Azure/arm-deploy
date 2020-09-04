@@ -12,7 +12,7 @@ This action can be used to deploy Azure Resource Manager templates at different 
 ## Inputs
 
 * `scope`: **Required** Provide the scope of the deployment. Valid values are: `resourcegroup`(default) , `subscription`, `managementgroup`.
-* `templates`: **Required** Specify the path or URL to the Azure Resource Manager template.
+* `template`: **Required** Specify the path or URL to the Azure Resource Manager template.
 * `subscriptionId`: Provide the Id of the subscription which should be used.Only required for scope `resourcegroup` & `subscription`. 
 * `resourceGroupName`: Provide the name of a resource group. Only required for Resource Group Scope
 * `region`: Provide the target region, only required for Management Group or Subscription deployments.
@@ -34,7 +34,7 @@ Every template output will be exported as output.
     scope: resourcegroup
     subscriptionId: <YourSubscriptionId>
     resourceGroupName: <YourResourceGroup>
-    templates: <path/to/azuredeploy.json>
+    template: <path/to/azuredeploy.json>
 ```
 
 ## Example
@@ -56,7 +56,7 @@ jobs:
         scope: resourcegroup
         subscriptionId: e1046c08-7072-****-****-************
         resourceGroupName: github-action-arm-rg
-        templates: ./azuredeploy.json
+        template: ./azuredeploy.json
         parameters: storageAccountType=Standard_LRS
 ```
 
@@ -71,7 +71,7 @@ In this exmaple, our template outputs `containerName`.
     scope: resourcegroup
     subscriptionId: e1046c08-7072-****-****-************
     resourceGroupName: azurearmaction
-    templates: examples/template/template.json
+    template: examples/template/template.json
     parameters: examples/template/parameters.json
     deploymentName: github-advanced-test
 ```

@@ -13,16 +13,16 @@ export async function main(): Promise<Outputs> {
     const azPath = await which("az", true);
 
     // retrieve action variables
-    const scope = getInput('scope')?getInput('scope'):"resourcegroup"
+    const scope = getInput('scope')||"resourcegroup"
     const subscriptionId = getInput('subscriptionId')
     const region = getInput('region')
     const resourceGroupName = getInput('resourceGroupName')
-    const templates = getInput('templates')
+    const template = getInput('template')
     const deploymentMode = getInput('deploymentMode')
     const deploymentName = getInput('deploymentName')
     const parameters = getInput('parameters')
     const managementGroupId = getInput('managementGroupId')
-    const validationOnly = getInput('validationOnly') == 'true';
+    const validationOnly = false;
 
     // change the subscription context
     if (scope != "managementgroup") {
@@ -34,13 +34,13 @@ export async function main(): Promise<Outputs> {
     let result: Outputs = {};
     switch(scope) {
         case "resourcegroup":
-            result = await DeployResourceGroupScope(azPath, validationOnly, resourceGroupName, templates, deploymentMode, deploymentName, parameters)
+            result = await DeployResourceGroupScope(azPath, validationOnly, resourceGroupName, template, deploymentMode, deploymentName, parameters)
             break
         case "managementgroup":
-            result = await DeployManagementGroupScope(azPath, validationOnly, region, templates, deploymentMode, deploymentName, parameters, managementGroupId)
+            result = await DeployManagementGroupScope(azPath, validationOnly, region, template, deploymentMode, deploymentName, parameters, managementGroupId)
             break
         case "subscription":
-            result = await DeploySubscriptionScope(azPath, validationOnly, region, templates, deploymentMode, deploymentName, parameters)
+            result = await DeploySubscriptionScope(azPath, validationOnly, region, template, deploymentMode, deploymentName, parameters)
             break
         default:
             throw new Error("Invalid scope. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'")
