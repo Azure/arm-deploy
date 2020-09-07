@@ -10,13 +10,13 @@ inputs:
   managementGroupId:
     description: "Specify the Id for the Management Group, only required for Management Group Deployments."
     required: false
-  location:
+  region:
     description: "Provide the target region, only required for management Group or Subscription deployments."
     required: false
   resourceGroupName:
     description: "Provide the name of a resource group."
     required: false
-  templateLocation:
+  template:
     description: "Specify the path or URL to the Azure Resource Manager template."
     required: true
   deploymentMode:
@@ -28,9 +28,6 @@ inputs:
     required: false
   parameters:
     description: "Supply deployment parameter values."
-    required: false
-  validationOnly:
-    description: "Whenether the template should only be validated or also deployed. Valid values are: 'true', 'false'"
     required: false
 branding:
   color: orange

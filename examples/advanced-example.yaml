@@ -21,7 +21,7 @@ jobs:
           scope: resourcegroup
           subscriptionId: e1046c08-7072-****-****-************
           resourceGroupName: azurearmaction
-          templateLocation: examples/template/template.json
+          template: examples/template/template.json
           parameters: examples/template/parameters.json
           deploymentName: github-advanced-test
 
@@ -33,7 +33,7 @@ jobs:
           scope: resourcegroup
           subscriptionId: e1046c08-7072-****-****-************
           resourceGroupName: azurearmaction
-          templateLocation: examples/template/template.json
+          template: examples/template/template.json
           parameters: examples/template/parameters.json containerName=${{ steps.deploy.outputs.containerName }}-overriden
           deploymentName: github-advanced-test              
               

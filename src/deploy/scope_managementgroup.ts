@@ -1,54 +1,70 @@
 import { exec } from '@actions/exec';
 import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
-import { info, warning } from '@actions/core';
+import * as core from '@actions/core';
 
-export async function DeployManagementGroupScope(azPath: string, validationOnly: boolean, location: string,  templateLocation: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string): Promise<Outputs> {    
-    // Check if location is set
-    if (!location) {
-        throw Error("Location must be set.")
+export async function DeployManagementGroupScope(azPath: string, validationOnly: boolean, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string): Promise<Outputs> {
+    // Check if region is set
+    if (!region) {
+        throw Error("Region must be set.")
     }
-    
+
+    // check if mode is set as this will be ignored
+    if (deploymentMode != "") {
+        core.warning("Deployment Mode is not supported for subscription scoped deployments, this parameter will be ignored!")
+    }
     // create the parameter list
     const azDeployParameters = [
-        location ? `--location ${location}` : undefined,
-        templateLocation ?
-            templateLocation.startsWith("http") ? `--template-uri ${templateLocation}`: `--template-file ${templateLocation}`
-        : undefined,
+        region ? `--location ${region}` : undefined,
+        template ?
+            template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
+            : undefined,
         managementGroupId ? `--management-group-id ${managementGroupId}` : undefined,
-        deploymentMode ? `--mode ${deploymentMode}` : undefined,
         deploymentName ? `--name ${deploymentName}` : undefined,
         parameters ? `--parameters ${parameters}` : undefined
     ].filter(Boolean).join(' ');
 
     // configure exec to write the json output to a buffer
     let commandOutput = '';
-    const options: ExecOptions = {
+    const deployOptions: ExecOptions = {
         silent: true,
         failOnStdErr: true,
         listeners: {
+            stderr: (data: BufferSource) => {
+                core.warning(data.toString());
+            },
             stdline: (data: string) => {
                 if (!data.startsWith("[command]"))
                     commandOutput += data;
                 // console.log(data);
-            },   
+            },
+        }
+    }
+    const validateOptions: ExecOptions = {
+        silent: true,
+        ignoreReturnCode: true,
+        listeners: {
+            stderr: (data: BufferSource) => {
+                core.warning(data.toString());
+            },
         }
     }
 
     // validate the deployment
-    info("Validating template...")
-    var code = await exec(`"${azPath}" deployment mg validate ${azDeployParameters} -o json`, [], { silent: true, ignoreReturnCode: true });
+    core.info("Validating template...")
+    var code = await exec(`"${azPath}" deployment mg validate ${azDeployParameters} -o json`, [], validateOptions);
     if (validationOnly && code != 0) {
         throw new Error("Template validation failed")
     } else if (code != 0) {
-        warning("Template validation failed.")
+        core.warning("Template validation failed.")
     }
 
     // execute the deployment
-    info("Creating deployment...")
-    await exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], options);
-
+    core.info("Creating deployment...")
+    await exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
+    core.debug(commandOutput);
+    
     // Parse the Outputs
-    info("Parsing outputs...")
+    core.info("Parsing outputs...")
     return ParseOutputs(commandOutput)
 }

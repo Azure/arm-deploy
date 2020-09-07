@@ -5,7 +5,7 @@
         "containerName": {
             "value": "github-action"
         },
-        "location": {
+        "region": {
             "value": "westeurope"
         },
         "imageType": {

@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "location": {
+        "region": {
             "type": "string"
         },
         "containerName": {
@@ -48,7 +48,7 @@
     },
     "resources": [
         {
-            "location": "[parameters('location')]",
+            "region": "[parameters('region')]",
             "name": "[parameters('containerName')]",
             "type": "Microsoft.ContainerInstance/containerGroups",
             "apiVersion": "2018-10-01",
@@ -79,9 +79,9 @@
         }
     ],
     "outputs": {
-        "location": {
+        "region": {
             "type": "string",
-            "value": "[parameters('location')]"
+            "value": "[parameters('region')]"
         },
         "containerName": {
             "type": "string",
