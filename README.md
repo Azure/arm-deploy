@@ -11,15 +11,15 @@ This action can be used to deploy Azure Resource Manager templates at different 
 
 ## Inputs
 
-* `scope`: **Required** Provide the scope of the deployment. Valid values are: `resourcegroup`(default) , `subscription`, `managementgroup`.
+* `scope`: Provide the scope of the deployment. Valid values are: `resourcegroup`(default) , `subscription`, `managementgroup`. 
+* `resourceGroupName`: **Conditional** Provide the name of a resource group. Only required for Resource Group Scope
+* `subscriptionId`: **Conditional** Provide the subscription ID  which should be used. Only required for scope `resourcegroup` & `subscription`. 
+* `managementGroupId`: **Conditional** Specify the Management Group ID, only required for Management Group Deployments.
+* `region`: **Conditional** Provide the target region, only required for Management Group or Subscription deployments.
 * `template`: **Required** Specify the path or URL to the Azure Resource Manager template.
-* `subscriptionId`: Provide the Id of the subscription which should be used.Only required for scope `resourcegroup` & `subscription`. 
-* `resourceGroupName`: Provide the name of a resource group. Only required for Resource Group Scope
-* `region`: Provide the target region, only required for Management Group or Subscription deployments.
-
-* `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate`
-* `deploymentName` Specifies the name of the resource group deployment to create.
-* `parameters` Supply deployment parameter values or local as well as remote value files.   
+* `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values. Or local / remote value file.  
+* `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group). 
+* `deploymentName`: Specifies the name of the resource group deployment to create.
 
 
 
@@ -31,7 +31,6 @@ Every template output will be exported as output.
 ```yml
 - uses: azure/arm-deploy@v1
   with:
-    scope: resourcegroup
     subscriptionId: <YourSubscriptionId>
     resourceGroupName: <YourResourceGroup>
     template: <path/to/azuredeploy.json>
@@ -53,7 +52,6 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - uses: azure/arm-deploy@v1
       with:
-        scope: resourcegroup
         subscriptionId: e1046c08-7072-****-****-************
         resourceGroupName: github-action-arm-rg
         template: ./azuredeploy.json
@@ -68,7 +66,6 @@ In this exmaple, our template outputs `containerName`.
 - uses: azure/arm-deploy@v1
   id: deploy
   with:
-    scope: resourcegroup
     subscriptionId: e1046c08-7072-****-****-************
     resourceGroupName: azurearmaction
     template: examples/template/template.json
