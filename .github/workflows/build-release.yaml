@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@main
+        uses: actions/checkout@master
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
@@ -36,6 +36,6 @@ jobs:
           git commit -m "Add changes"
 
       - name: Push changes
-        uses: ad-m/github-push-action@main
+        uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
