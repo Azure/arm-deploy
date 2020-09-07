@@ -53,7 +53,7 @@ export async function DeployResourceGroupScope(azPath: string, validationOnly: b
     }
 
     // validate the deployment
-    core.core.info("Validating template...")
+    core.info("Validating template...")
     var code = await exec(`"${azPath}" deployment group validate ${azDeployParameters} -o json`, [], validateOptions);
     if (validationOnly && code != 0) {
         throw new Error("Template validation failed")
@@ -62,11 +62,11 @@ export async function DeployResourceGroupScope(azPath: string, validationOnly: b
     }
 
     // execute the deployment
-    core.core.info("Creating deployment...")
+    core.info("Creating deployment...")
     await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
     core.debug(commandOutput);
     
     // Parse the Outputs
-    core.core.info("Parsing outputs...")
+    core.info("Parsing outputs...")
     return ParseOutputs(commandOutput)
 }
