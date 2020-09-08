@@ -1,5 +1,5 @@
-name: "Azure Resource Manager (ARM) Template Deployment"
-description: "Use this GitHub Action task deploy an Azure Resource Manager (ARM) template"
+name: "Deploy Azure Resource Manager Template"
+description: "Use this GitHub Action task to deploy Azure Resource Manager (ARM) template"
 inputs:
   scope:
     description: "Provide the scope of the deployment. alid values are: 'resourcegroup', 'managementgroup', 'subscription'"
