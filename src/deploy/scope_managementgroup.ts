@@ -11,7 +11,7 @@ export async function DeployManagementGroupScope(azPath: string, validationOnly:
 
     // check if mode is set as this will be ignored
     if (deploymentMode != "") {
-        core.warning("Deployment Mode is not supported for subscription scoped deployments, this parameter will be ignored!")
+        core.warning("Deployment Mode is not supported for management group scoped deployments, this parameter will be ignored!")
     }
     // create the parameter list
     const azDeployParameters = [
