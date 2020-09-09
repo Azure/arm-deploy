@@ -61,8 +61,8 @@ export async function DeploySubscriptionScope(azPath: string, validationOnly: bo
 
     // execute the deployment
     core.info("Creating deployment...")
-    await exec(`"${azPath}" deployment sub create ${azDeployParameters} -o json`, [], deployOptions);
-    if (code != 0) {
+    var deploymentCode = await exec(`"${azPath}" deployment sub create ${azDeployParameters} -o json`, [], deployOptions);
+    if (deploymentCode != 0) {
         core.error("Deployment failed.")
     }
     core.debug(commandOutput);

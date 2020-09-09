@@ -63,8 +63,8 @@ export async function DeployResourceGroupScope(azPath: string, validationOnly: b
 
     // execute the deployment
     core.info("Creating deployment...")
-    await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
-    if (code != 0) {
+    var deploymentCode = await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
+    if (deploymentCode != 0) {
         core.error("Deployment failed.")
     }
     core.debug(commandOutput);
