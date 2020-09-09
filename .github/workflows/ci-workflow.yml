@@ -26,7 +26,7 @@ jobs:
           INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-webapp-basic-linux/azuredeploy.json
           INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-webapp-basic-linux/azuredeploy.parameters.json
           INPUT_DEPLOYMENTNAME: github-test-rg
-          INPUT_DEPLOYMENTMODE: Incremental
+          INPUT_DEPLOYMENTMODE: Complete
         run: ts-node test/main.tests.ts
 
       - name: Management group scope test

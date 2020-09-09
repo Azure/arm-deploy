@@ -54,7 +54,7 @@ export async function DeploySubscriptionScope(azPath: string, validationOnly: bo
     core.info("Validating template...")
     var code = await exec(`"${azPath}" deployment sub validate ${azDeployParameters} -o json`, [], validateOptions);
     if (validationOnly && code != 0) {
-        throw new Error("Template validation failed")
+        throw new Error("Template validation failed.")
     } else if (code != 0) {
         core.warning("Template validation failed.")
     }
@@ -62,8 +62,11 @@ export async function DeploySubscriptionScope(azPath: string, validationOnly: bo
     // execute the deployment
     core.info("Creating deployment...")
     await exec(`"${azPath}" deployment sub create ${azDeployParameters} -o json`, [], deployOptions);
+    if (code != 0) {
+        core.error("Deployment failed.")
+    }
     core.debug(commandOutput);
-    
+
     // Parse the Outputs
     core.info("Parsing outputs...")
     return ParseOutputs(commandOutput)
