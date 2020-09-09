@@ -28,10 +28,11 @@ export async function DeployManagementGroupScope(azPath: string, validationOnly:
     let commandOutput = '';
     const deployOptions: ExecOptions = {
         silent: true,
+        ignoreReturnCode: true,
         failOnStdErr: true,
         listeners: {
             stderr: (data: BufferSource) => {
-                core.warning(data.toString());
+                core.error(data.toString());
             },
             stdline: (data: string) => {
                 if (!data.startsWith("[command]"))
