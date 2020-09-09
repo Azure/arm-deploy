@@ -1,4 +1,4 @@
-name: "Deploy Azure Resource Manager Template"
+name: "Deploy Azure Resource Manager (ARM) Template"
 description: "Use this GitHub Action task to deploy Azure Resource Manager (ARM) template"
 inputs:
   scope:
