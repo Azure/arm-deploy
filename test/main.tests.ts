@@ -4,7 +4,10 @@ import * as assert from 'assert';
 // Unit Tests
 export async function runTests() {
     let result = await main()
-    console.log(result)
+    if(result)
+    {
+        console.log(result)
+    }
 }
 
 runTests().catch(e => {
