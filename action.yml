@@ -22,7 +22,6 @@ inputs:
   deploymentMode:
     description: "Incremental (only add resources to resource group) or Complete (remove extra resources from resource group)."
     required: false
-    default: Incremental
   deploymentName:
     description: "Specifies the name of the resource group deployment to create."
     required: false

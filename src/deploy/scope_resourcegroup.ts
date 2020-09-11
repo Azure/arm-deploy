@@ -21,8 +21,8 @@ export async function DeployResourceGroupScope(azPath: string, validationOnly: b
         template ?
             template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
             : undefined,
-        deploymentMode ? `--mode ${deploymentMode}` : undefined,
-        deploymentName ? `--name ${deploymentName}` : undefined,
+        deploymentMode ? `--mode ${deploymentMode}` : "Incremental",
+        deploymentName ? `--name "${deploymentName}"` : undefined,
         parameters ? `--parameters ${parameters}` : undefined
     ].filter(Boolean).join(' ');
 
