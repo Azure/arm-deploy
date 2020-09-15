@@ -3,7 +3,7 @@ import { exec } from '@actions/exec';
 import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 
-export async function DeployResourceGroupScope(azPath: string, validationOnly: boolean, resourceGroupName: string, template: string, deploymentMode: string, deploymentName: string, parameters: string): Promise<Outputs> {
+export async function DeployResourceGroupScope(azPath: string, resourceGroupName: string, template: string, deploymentMode: string, deploymentName: string, parameters: string): Promise<Outputs> {
     // Check if resourceGroupName is set
     if (!resourceGroupName) {
         throw Error("ResourceGroup name must be set.")
@@ -56,21 +56,24 @@ export async function DeployResourceGroupScope(azPath: string, validationOnly: b
     // validate the deployment
     core.info("Validating template...")
     var code = await exec(`"${azPath}" deployment group validate ${azDeployParameters} -o json`, [], validateOptions);
-    if (validationOnly && code != 0) {
+    if (deploymentMode.toLowerCase() === "validate" && code != 0) {
         throw new Error("Template validation failed.")
     } else if (code != 0) {
         core.warning("Template validation failed.")
     }
 
-    // execute the deployment
-    core.info("Creating deployment...")
-    var deploymentCode = await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
-    if (deploymentCode != 0) {
-        core.error("Deployment failed.")
-    }
-    core.debug(commandOutput);
+    if (deploymentMode.toLowerCase() != "validate") {
+        // execute the deployment
+        core.info("Creating deployment...")
+        var deploymentCode = await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
+        if (deploymentCode != 0) {
+            core.error("Deployment failed.")
+        }
+        core.debug(commandOutput);
 
-    // Parse the Outputs
-    core.info("Parsing outputs...")
-    return ParseOutputs(commandOutput)
+        // Parse the Outputs
+        core.info("Parsing outputs...")
+        return ParseOutputs(commandOutput)
+    }
+    return {}
 }

@@ -3,15 +3,15 @@ import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 import * as core from '@actions/core';
 
-export async function DeployManagementGroupScope(azPath: string, validationOnly: boolean, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string): Promise<Outputs> {
+export async function DeployManagementGroupScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string): Promise<Outputs> {
     // Check if region is set
     if (!region) {
         throw Error("Region must be set.")
     }
 
     // check if mode is set as this will be ignored
-    if (deploymentMode != "") {
-        core.warning("Deployment Mode is not supported for management group scoped deployments, this parameter will be ignored!")
+    if (deploymentMode && deploymentMode.toLowerCase() != "validate") {
+        core.warning("This deployment mode is not supported for management group scoped deployments, this parameter will be ignored!")
     }
     // create the parameter list
     const azDeployParameters = [
@@ -54,21 +54,25 @@ export async function DeployManagementGroupScope(azPath: string, validationOnly:
     // validate the deployment
     core.info("Validating template...")
     var code = await exec(`"${azPath}" deployment mg validate ${azDeployParameters} -o json`, [], validateOptions);
-    if (validationOnly && code != 0) {
+    if (deploymentMode.toLowerCase() === "validate" && code != 0) {
         throw new Error("Template validation failed.")
     } else if (code != 0) {
         core.warning("Template validation failed.")
     }
 
-    // execute the deployment
-    core.info("Creating deployment...")
-    var deploymentCode = await exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
-    if (deploymentCode != 0) {
-        core.error("Deployment failed.")
-    }
-    core.debug(commandOutput);
+    if (deploymentMode.toLowerCase() != "validate") {
+        // execute the deployment
+        core.info("Creating deployment...")
+        var deploymentCode = await exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
+        if (deploymentCode != 0) {
+            core.error("Deployment failed.")
+        }
 
-    // Parse the Outputs
-    core.info("Parsing outputs...")
-    return ParseOutputs(commandOutput)
+        core.debug(commandOutput);
+
+        // Parse the Outputs
+        core.info("Parsing outputs...")
+        return ParseOutputs(commandOutput)
+    }
+    return {}
 }
