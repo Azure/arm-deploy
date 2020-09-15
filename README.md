@@ -18,7 +18,7 @@ This action can be used to deploy Azure Resource Manager templates at different 
 * `region`: **Conditional** Provide the target region, only required for Management Group or Subscription deployments.
 * `template`: **Required** Specify the path or URL to the Azure Resource Manager template.
 * `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values. Or local / remote value file.  
-* `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group). 
+* `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate` (only validates the template). 
 * `deploymentName`: Specifies the name of the resource group deployment to create.
 
 
