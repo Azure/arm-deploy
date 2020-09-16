@@ -15,18 +15,13 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
         throw Error(`Resource Group ${resourceGroupName} could not be found.`)
     }
 
-    if (deploymentMode === "validate") {
-        // updating mode as validate is not a valid mode value for Az cli command
-        deploymentMode = "Incremental"
-    }
-
     // create the parameter list
     const azDeployParameters = [
         resourceGroupName ? `--resource-group ${resourceGroupName}` : undefined,
         template ?
             template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
             : undefined,
-        deploymentMode ? `--mode ${deploymentMode}` : "Incremental",
+        deploymentMode && deploymentMode != "validate" ? `--mode ${deploymentMode}` : "--mode Incremental",
         deploymentName ? `--name "${deploymentName}"` : undefined,
         parameters ? `--parameters ${parameters}` : undefined
     ].filter(Boolean).join(' ');
