@@ -18,7 +18,7 @@ export async function main(): Promise<Outputs> {
     const region = getInput('region')
     const resourceGroupName = getInput('resourceGroupName')
     const template = getInput('template')
-    const deploymentMode = getInput('deploymentMode')
+    const deploymentMode = getInput('deploymentMode').toLowerCase()
     const deploymentName = getInput('deploymentName')
     const parameters = getInput('parameters')
     const managementGroupId = getInput('managementGroupId')

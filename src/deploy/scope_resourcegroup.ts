@@ -15,6 +15,11 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
         throw Error(`Resource Group ${resourceGroupName} could not be found.`)
     }
 
+    if (deploymentMode === "validate") {
+        // updating mode as validate is not a valid mode value for Az cli command
+        deploymentMode = "Incremental"
+    }
+
     // create the parameter list
     const azDeployParameters = [
         resourceGroupName ? `--resource-group ${resourceGroupName}` : undefined,
@@ -56,13 +61,13 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
     // validate the deployment
     core.info("Validating template...")
     var code = await exec(`"${azPath}" deployment group validate ${azDeployParameters} -o json`, [], validateOptions);
-    if (deploymentMode.toLowerCase() === "validate" && code != 0) {
+    if (deploymentMode === "validate" && code != 0) {
         throw new Error("Template validation failed.")
     } else if (code != 0) {
         core.warning("Template validation failed.")
     }
 
-    if (deploymentMode.toLowerCase() != "validate") {
+    if (deploymentMode != "validate") {
         // execute the deployment
         core.info("Creating deployment...")
         var deploymentCode = await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);

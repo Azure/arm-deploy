@@ -10,7 +10,7 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
     }
 
     // check if mode is set as this will be ignored
-    if (deploymentMode && deploymentMode.toLowerCase() != "validate") {
+    if (deploymentMode && deploymentMode != "validate") {
         core.warning("This deployment mode is not supported for subscription scoped deployments, this parameter will be ignored!")
     }
 
@@ -54,13 +54,13 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
     // validate the deployment
     core.info("Validating template...")
     var code = await exec(`"${azPath}" deployment sub validate ${azDeployParameters} -o json`, [], validateOptions);
-    if (deploymentMode.toLowerCase() === "validate" && code != 0) {
+    if (deploymentMode === "validate" && code != 0) {
         throw new Error("Template validation failed.")
     } else if (code != 0) {
         core.warning("Template validation failed.")
     }
 
-    if (deploymentMode.toLowerCase() != "validate") {
+    if (deploymentMode != "validate") {
         // execute the deployment
         core.info("Creating deployment...")
         var deploymentCode = await exec(`"${azPath}" deployment sub create ${azDeployParameters} -o json`, [], deployOptions);
