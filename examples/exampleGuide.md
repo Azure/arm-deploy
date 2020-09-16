@@ -28,8 +28,8 @@ More [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree
     scope: managementgroup 
     managementGroupId: demoId 
     region: centralus 
-    template: https://teststorage.blob.......... /template.json
-    parameters: https://teststorage.blob.......... /parameters.json
+    template: https://teststorage.blob/template.json
+    parameters: https://teststorage.blob/parameters.json
 
 [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree/master/managementgroup-deployments) can be found here.
 

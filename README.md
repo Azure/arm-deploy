@@ -93,6 +93,8 @@ If we now add a Shell script with a simple echo from that value, we can see that
 - run: echo ${{ steps.deploy.outputs.containerName }}
 ```
 
+For more examples, refer : [Example Guide](https://github.com/Azure/arm-deploy/blob/main/examples/exampleGuide.md)
+
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
