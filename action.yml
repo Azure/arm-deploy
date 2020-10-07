@@ -5,7 +5,7 @@ inputs:
     description: "Provide the scope of the deployment. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'"
     required: true
   subscriptionId:
-    description: "Provide the Id of the subscription which should be used, only required for resource Group or Subscription deployments."
+    description: "Override the Subscription Id set by Azure Login."
     required: false
   managementGroupId:
     description: "Specify the Id for the Management Group, only required for Management Group Deployments."
