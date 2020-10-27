@@ -15,7 +15,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - uses: whiteducksoftware/azure-arm-action-js@v3
+      - uses: azure/arm-deploy@v1
         id: deploy
         with:
           scope: resourcegroup
@@ -27,7 +27,7 @@ jobs:
 
       - run: echo ${{ steps.deploy.outputs.containerName }}
 
-      - uses: whiteducksoftware/azure-arm-action-js@v3
+      - uses: azure/arm-deploy@v1
         id: deploy2
         with:
           scope: resourcegroup
