@@ -4,7 +4,7 @@ Open PowerShell, go to the directory where the repo is stored (.../arm-deploy/) 
 
 **1.npm install** \
 npm install downloads dependencies defined in a package. json file and generates a node_modules folder with the installed modules. \
-**2.npm install -g @zeit/ncc** \
+**2.npm install -g @vercel/ncc** \
 **3.ncc build src/entrypoint.ts -s -o _build**  \
 ncc is a simple CLI for compiling a Node.js module into a single file, together with all its dependencies, gcc-style. \
 **4. az login** \
