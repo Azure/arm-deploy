@@ -10,6 +10,6 @@ Example, for releasing v1.1.1, update releases/v1.
 Example,v1.0.0. , v1.0.1, v2.0.1, etc. and also have tags like v1, v2 for every major version release.
 4. On releasing minor and patch versions, update the tag of the corresponding major version. \
 Example, for releasing v1.0.1, update the v1 tag to point to the ref of the current release. \
-The following commands can be used to update the tag :
+The following commands are to be run on the release\v1 branch so that it picks the latest commit and updates the v1 tag accordingly :
 * `git tag -fa v1 -m "Update v1 tag"`
 * `git push origin v1 --force`
