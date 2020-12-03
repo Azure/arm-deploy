@@ -10,7 +10,6 @@ Different scopes:
     resourceGroupName**: demoGroup 
     template: examples/template/template.json
 
-
 There are a lot of [sample templates](https://github.com/Azure/azure-quickstart-templates) available which can be used for deployment.  
 
 **Subscription**
@@ -32,6 +31,9 @@ More [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree
     parameters: https://teststorage.blob/parameters.json
 
 [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree/master/managementgroup-deployments) can be found here.
+If there is a requirement to override any parameter, it can be specified with the parameter file.
+Example:
+ parameters: https://teststorage.blob/parameters.json parameterName=parameterValue
 
 **Things to keep in mind:** 
 
