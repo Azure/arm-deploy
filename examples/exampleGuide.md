@@ -31,7 +31,7 @@ More [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree
     parameters: https://teststorage.blob/parameters.json
 
 [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree/master/managementgroup-deployments) can be found here.
-If there is a requirement to override any parameter, it can be specified with the parameter file.
+**Note:** Parameter value specified in parameter file can be overridden by specifying it along with parameter file name.
 Example:
  parameters: https://teststorage.blob/parameters.json parameterName=parameterValue
 
