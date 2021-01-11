@@ -93,6 +93,8 @@ If we now add a Shell script with a simple echo from that value, we can see that
 - run: echo ${{ steps.deploy.outputs.containerName }}
 ```
 
+ARM Deploy Actions is supported for the Azure public cloud as well as Azure government clouds ('AzureUSGovernment' or 'AzureChinaCloud') and Azure Stack ('AzureStack') Hub. Before running this action, login to the respective Azure Cloud  using [Azure Login](https://github.com/Azure/login) by setting appropriate value for the `environment` parameter.
+
 For more examples, refer : [Example Guide](https://github.com/Azure/arm-deploy/blob/main/examples/exampleGuide.md)
 
 # Contributing
