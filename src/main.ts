@@ -24,7 +24,7 @@ export async function main(): Promise<Outputs> {
     const managementGroupId = getInput('managementGroupId')
 
     // change the subscription context
-    if (scope != "managementgroup") {
+    if (scope !== "managementgroup" && subscriptionId !== "") {
         info("Changing subscription context...")
         await exec(`"${azPath}" account set --subscription ${subscriptionId}`, [], { silent: true })
     }

@@ -8,7 +8,6 @@ Our template has two outputs `location` and `containerName`. But we are only int
   id: deploy
   with:
     scope: resourcegroup
-    subscriptionId: e1046c08-7072-****-****-************
     resourceGroupName: azurearmaction
     template: examples/template/template.json
     parameters: examples/template/parameters.json
@@ -41,7 +40,6 @@ Now we add our second deployment which relies on that value and modfies the `con
   id: deploy2
   with:
     scope: resourcegroup
-    subscriptionId: e1046c08-7072-****-****-************
     resourceGroupName: azurearmaction
     template: examples/template/template.json
     parameters: examples/template/parameters.json containerName=${{ steps.deploy.outputs.containerName }}-overriden

@@ -19,7 +19,6 @@ jobs:
         id: deploy
         with:
           scope: resourcegroup
-          subscriptionId: e1046c08-7072-****-****-************
           resourceGroupName: azurearmaction
           template: examples/template/template.json
           parameters: examples/template/parameters.json
@@ -31,7 +30,6 @@ jobs:
         id: deploy2
         with:
           scope: resourcegroup
-          subscriptionId: e1046c08-7072-****-****-************
           resourceGroupName: azurearmaction
           template: examples/template/template.json
           parameters: examples/template/parameters.json containerName=${{ steps.deploy.outputs.containerName }}-overriden
