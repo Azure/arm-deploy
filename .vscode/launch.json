@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/src/entrypoint.ts",
+            "outFiles": [
+                "${workspaceFolder}/_build/*.js"
+            ],
+            "env": {
+                "INPUT_SCOPE": "resourcegroup",
+                "INPUT_SUBSCRIPTIONID": "c00d16c7-6c1f-4c03-9be1-6934a4c49682",
+                "INPUT_RESOURCEGROUPNAME": "kptest",
+                "INPUT_TEMPLATE": "./test/template.json",
+                "INPUT_PARAMETERS": "./test/parameters.json",
+                "INPUT_DEPLOYMENTNAME": "github-test",
+                "INPUT_DEPLOYMENTMODE": "Incremental"
+            }
+        }
+    ]
+}

@@ -13,12 +13,12 @@ This action can be used to deploy Azure Resource Manager templates at different 
 
 * `scope`: Provide the scope of the deployment. Valid values are: `resourcegroup`(default) , `subscription`, `managementgroup`. 
 * `resourceGroupName`: **Conditional** Provide the name of a resource group. Only required for Resource Group Scope
-* `subscriptionId`: **Conditional** Provide the subscription ID  which should be used. Only required for scope `resourcegroup` & `subscription`. 
+* `subscriptionId`: **Conditional** Provide a value to override the subscription ID set by [Azure Login](https://github.com/Azure/login).
 * `managementGroupId`: **Conditional** Specify the Management Group ID, only required for Management Group Deployments.
 * `region`: **Conditional** Provide the target region, only required for Management Group or Subscription deployments.
 * `template`: **Required** Specify the path or URL to the Azure Resource Manager template.
 * `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values. Or local / remote value file.  
-* `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group). 
+* `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate` (only validates the template). 
 * `deploymentName`: Specifies the name of the resource group deployment to create.
 
 
@@ -52,7 +52,6 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - uses: azure/arm-deploy@v1
       with:
-        subscriptionId: e1046c08-7072-****-****-************
         resourceGroupName: github-action-arm-rg
         template: ./azuredeploy.json
         parameters: storageAccountType=Standard_LRS
@@ -66,7 +65,6 @@ In this exmaple, our template outputs `containerName`.
 - uses: azure/arm-deploy@v1
   id: deploy
   with:
-    subscriptionId: e1046c08-7072-****-****-************
     resourceGroupName: azurearmaction
     template: examples/template/template.json
     parameters: examples/template/parameters.json
@@ -92,6 +90,10 @@ If we now add a Shell script with a simple echo from that value, we can see that
 ```yaml
 - run: echo ${{ steps.deploy.outputs.containerName }}
 ```
+
+ARM Deploy Actions is supported for the Azure public cloud as well as Azure government clouds ('AzureUSGovernment' or 'AzureChinaCloud') and Azure Stack ('AzureStack') Hub. Before running this action, login to the respective Azure Cloud  using [Azure Login](https://github.com/Azure/login) by setting appropriate value for the `environment` parameter.
+
+For more examples, refer : [Example Guide](https://github.com/Azure/arm-deploy/blob/main/examples/exampleGuide.md)
 
 # Contributing
 

@@ -18,13 +18,44 @@ jobs:
 
       - run: sudo npm i -g ts-node
 
-      - name: Test
+      - name: Resource group scope test
         env:
           INPUT_SCOPE: resourcegroup
           INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
-          INPUT_RESOURCEGROUPNAME: azurearmaction
+          INPUT_RESOURCEGROUPNAME: E2eTestResourceGroupForArmAction
+          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-webapp-basic-linux/azuredeploy.json
+          INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-webapp-basic-linux/azuredeploy.parameters.json
+          INPUT_DEPLOYMENTNAME: github-test-rg
+          INPUT_DEPLOYMENTMODE: Complete
+        run: ts-node test/main.tests.ts
+
+      - name: Management group scope test
+        env:
+          INPUT_SCOPE: managementgroup
+          INPUT_MANAGEMENTGROUPID: E2eTestGroupForArmAction
+          INPUT_REGION: WestUS
           INPUT_TEMPLATE: ./test/template.json
           INPUT_PARAMETERS: ./test/parameters.json
-          INPUT_DEPLOYMENTNAME: github-test
-          INPUT_DEPLOYMENTMODE: Incremental
+          INPUT_DEPLOYMENTNAME: github-test-mg
+        run: ts-node test/main.tests.ts
+
+      - name: Subscription scope test
+        env:
+          INPUT_SCOPE: subscription
+          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
+          INPUT_REGION: centralus
+          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/emptyRG.json
+          INPUT_PARAMETERS: rgName=demoResourceGroup rgLocation=centralus
+          INPUT_DEPLOYMENTNAME: github-test-subs
+        run: ts-node test/main.tests.ts
+
+      - name: Validate mode test
+        env:
+          INPUT_SCOPE: resourcegroup
+          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
+          INPUT_RESOURCEGROUPNAME: E2eTestResourceGroupForArmAction
+          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-webapp-basic-linux/azuredeploy.json
+          INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-webapp-basic-linux/azuredeploy.parameters.json
+          INPUT_DEPLOYMENTNAME: github-test-rg
+          INPUT_DEPLOYMENTMODE: Validate
         run: ts-node test/main.tests.ts

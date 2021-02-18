@@ -10,7 +10,6 @@ Different scopes:
     resourceGroupName**: demoGroup 
     template: examples/template/template.json
 
-
 There are a lot of [sample templates](https://github.com/Azure/azure-quickstart-templates) available which can be used for deployment.  
 
 **Subscription**
@@ -28,10 +27,13 @@ More [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree
     scope: managementgroup 
     managementGroupId: demoId 
     region: centralus 
-    template: https://teststorage.blob.......... /template.json
-    parameters: https://teststorage.blob.......... /parameters.json
+    template: https://teststorage.blob/template.json
+    parameters: https://teststorage.blob/parameters.json
 
 [Sample templates](https://github.com/Azure/azure-quickstart-templates/tree/master/managementgroup-deployments) can be found here.
+**Note:** Parameter value specified in parameter file can be overridden by specifying it along with parameter file name.
+Example:
+ parameters: https://teststorage.blob/parameters.json parameterName=parameterValue
 
 **Things to keep in mind:** 
 
