@@ -38,7 +38,7 @@ Every template output will be exported as output.
 
 ## Example
 
-```yml
+```yaml
 on: [push]
 name: AzureLoginSample
 
@@ -57,8 +57,55 @@ jobs:
         parameters: storageAccountType=Standard_LRS
 ```
 
-## Another example on how to use this Action to use get the output of ARM template
-In this exmaple, our template outputs `containerName`.
+## Another example which ensures the Azure Resource Group exists before ARM deployment
+In the preceeding example there is a pre-requisite that an existing Azure Resource Group named ```github-action-arm-rg``` must already exist.  
+
+The below example makes use of the [Azure Powershell Action](https://github.com/marketplace/actions/azure-powershell-action) to ensure the resource group is created before doing an ARM deployment.
+
+## Steps
+When generating your credentials (in this example we store in a secret named ```AZURE_CREDENTIALS```) you will need to specify a scope at the subscription level.
+
+```azurecli
+az ad sp create-for-rbac --name "{sp-name}" --sdk-auth --role contributor --scopes /subscriptions/{subscription-id}
+```
+
+See [Configure deployment credentials](https://github.com/marketplace/actions/azure-login#configure-deployment-credentials).
+
+## Example
+```yaml
+on: [push]
+name: AzureLoginSample
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      ResourceGroupName: github-action-arm-rg
+    steps:
+    - uses: actions/checkout@master
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true
+    - uses: Azure/powershell@v1
+      with:
+        inlineScript: |
+          $rgExists = az group exists --name ${{ env.ResourceGroupName }}
+          if ($rgExists -eq 'false') {
+              az group create --name ${{ env.ResourceGroupName }} --location "Australia East"
+              Write-Host "Azure resource group created"
+          }
+        azPSVersion: latest
+        failOnStandardError: true
+    - uses: azure/arm-deploy@v1
+      with:
+        resourceGroupName: ${{ env.ResourceGroupName }}
+        template: ./azuredeploy.json
+        parameters: storageAccountType=Standard_LRS
+```
+
+## Another example on how to use this Action to get the output of ARM template
+In this example, our template outputs `containerName`.
 
 ## Steps
 ```yaml
