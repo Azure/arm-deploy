@@ -81,6 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ResourceGroupName: github-action-arm-rg
+      ResourceGroupLocation: "Australia East"
     steps:
     - uses: actions/checkout@master
     - uses: azure/login@v1
@@ -92,7 +93,7 @@ jobs:
         inlineScript: |
           $rgExists = az group exists --name ${{ env.ResourceGroupName }}
           if ($rgExists -eq 'false') {
-              az group create --name ${{ env.ResourceGroupName }} --location "Australia East"
+              az group create --name ${{ env.ResourceGroupName }} --location ${{ env.ResourceGroupLocation }}
               Write-Host "Azure resource group created"
           }
         azPSVersion: latest
