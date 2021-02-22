@@ -40,7 +40,7 @@ Every template output will be exported as output.
 
 ```yaml
 on: [push]
-name: AzureLoginSample
+name: AzureARMSample
 
 jobs:
   build-and-deploy:
@@ -74,7 +74,7 @@ See [Configure deployment credentials](https://github.com/marketplace/actions/az
 ## Example
 ```yaml
 on: [push]
-name: AzureLoginSample
+name: AzureARMSample
 
 jobs:
   build-and-deploy:
