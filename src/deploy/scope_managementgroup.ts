@@ -34,11 +34,13 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
             stderr: (data: BufferSource) => {
                 core.error(data.toString());
             },
-            stdline: (data: string) => {
-                if (!data.startsWith("[command]"))
-                    commandOutput += data;
-                // console.log(data);
+            stdout: (data: BufferSource) => {
+                commandOutput += data.toString();
+                // console.log(data.toString());
             },
+            debug: (data: string) => {
+                core.debug(data);
+            }
         }
     }
     const validateOptions: ExecOptions = {
