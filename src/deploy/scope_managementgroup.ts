@@ -36,6 +36,7 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
             },
             stdout: (data: BufferSource) => {
                 commandOutput += data.toString();
+                core.info(commandOutput);
                 // console.log(data.toString());
             },
             debug: (data: string) => {
@@ -47,9 +48,12 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
         silent: true,
         ignoreReturnCode: true,
         listeners: {
+            stdout: (data: BufferSource) => {
+                core.info(data.toString());
+            },
             stderr: (data: BufferSource) => {
                 core.warning(data.toString());
-            },
+            }
         }
     }
 
