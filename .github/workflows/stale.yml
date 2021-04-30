@@ -18,3 +18,4 @@ jobs:
           days-before-close: -1
           operations-per-run: 100
           exempt-issue-labels: "backlog"
+[![Mark stale issues](https://github.com/Azure/arm-deploy/actions/workflows/stale.yml/badge.svg)](https://github.com/Azure/arm-deploy/actions/workflows/stale.yml)
