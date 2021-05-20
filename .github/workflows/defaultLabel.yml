@@ -15,7 +15,6 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-issue-message: 'This issue is marked default for generating issues report.'
         stale-issue-label: 'default'
-        exempt-issue-labels: 'default'
         days-before-stale: 0
         days-before-close: -1
         operations-per-run: 100
