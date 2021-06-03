@@ -26,12 +26,14 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
 
     // configure exec to write the json output to a buffer
     let commandOutput = '';
+    let commandError = '';
     const deployOptions: ExecOptions = {
         silent: true,
         ignoreReturnCode: true,
-        failOnStdErr: true,
+        failOnStdErr: false,
         listeners: {
             stderr: (data: BufferSource) => {
+                commandError += data.toString();
                 core.error(data.toString());
             },
             stdout: (data: BufferSource) => {
@@ -69,7 +71,9 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
         if (deploymentCode != 0) {
             core.error("Deployment failed.")
         }
-
+        if (commandError.trim().length !== 0) {
+            core.error("Deployment failed because one or more lines were written to the STDERR stream.")
+        }
         core.debug(commandOutput);
 
         // Parse the Outputs
