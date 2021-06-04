@@ -1614,13 +1614,15 @@ function DeployManagementGroupScope(azPath, region, template, deploymentMode, de
             if (commandStdErr.trim().length !== 0) {
                 core.error(commandStdErr);
             }
-            if (deploymentCode != 0) {
-                core.error("Deployment failed.");
+            else {
+                if (deploymentCode != 0) {
+                    core.error("Deployment failed.");
+                }
+                core.debug(commandOutput);
+                // Parse the Outputs
+                core.info("Parsing outputs...");
+                return utils_1.ParseOutputs(commandOutput);
             }
-            core.debug(commandOutput);
-            // Parse the Outputs
-            core.info("Parsing outputs...");
-            return utils_1.ParseOutputs(commandOutput);
         }
         return {};
     });
@@ -1720,13 +1722,15 @@ function DeployResourceGroupScope(azPath, resourceGroupName, template, deploymen
             if (commandStdErr.trim().length !== 0) {
                 core.error(commandStdErr);
             }
-            if (deploymentCode != 0) {
-                core.error("Deployment failed.");
+            else {
+                if (deploymentCode != 0) {
+                    core.error("Deployment failed.");
+                }
+                core.debug(commandOutput);
+                // Parse the Outputs
+                core.info("Parsing outputs...");
+                return utils_1.ParseOutputs(commandOutput);
             }
-            core.debug(commandOutput);
-            // Parse the Outputs
-            core.info("Parsing outputs...");
-            return utils_1.ParseOutputs(commandOutput);
         }
         return {};
     });
@@ -1824,13 +1828,15 @@ function DeploySubscriptionScope(azPath, region, template, deploymentMode, deplo
             if (commandStdErr.trim().length !== 0) {
                 core.error(commandStdErr);
             }
-            if (deploymentCode != 0) {
-                core.error("Deployment failed.");
+            else {
+                if (deploymentCode != 0) {
+                    core.error("Deployment failed.");
+                }
+                core.debug(commandOutput);
+                // Parse the Outputs
+                core.info("Parsing outputs...");
+                return utils_1.ParseOutputs(commandOutput);
             }
-            core.debug(commandOutput);
-            // Parse the Outputs
-            core.info("Parsing outputs...");
-            return utils_1.ParseOutputs(commandOutput);
         }
         return {};
     });

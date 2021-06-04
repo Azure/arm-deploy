@@ -69,16 +69,16 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
         var deploymentCode = await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
         if (commandStdErr.trim().length !== 0) {
             core.error(commandStdErr)
+        } else {
+            if (deploymentCode != 0) {
+                core.error("Deployment failed.")
+            }
+            core.debug(commandOutput);
+    
+            // Parse the Outputs
+            core.info("Parsing outputs...")
+            return ParseOutputs(commandOutput)
         }
-
-        if (deploymentCode != 0) {
-            core.error("Deployment failed.")
-        }
-        core.debug(commandOutput);
-
-        // Parse the Outputs
-        core.info("Parsing outputs...")
-        return ParseOutputs(commandOutput)
     }
     return {}
 }
