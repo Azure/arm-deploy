@@ -1610,19 +1610,17 @@ function DeployManagementGroupScope(azPath, region, template, deploymentMode, de
         if (deploymentMode != "validate") {
             // execute the deployment
             core.info("Creating deployment...");
-            var deploymentCode = yield exec_1.exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
+            var deploymentCode = yield exec_1.exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
             if (commandStdErr.trim().length !== 0) {
                 core.error(commandStdErr);
             }
-            else {
-                if (deploymentCode != 0) {
-                    core.error("Deployment failed.");
-                }
-                core.debug(commandOutput);
-                // Parse the Outputs
-                core.info("Parsing outputs...");
-                return utils_1.ParseOutputs(commandOutput);
+            if (deploymentCode != 0) {
+                core.error("Deployment failed.");
             }
+            core.debug(commandOutput);
+            // Parse the Outputs
+            core.info("Parsing outputs...");
+            return utils_1.ParseOutputs(commandOutput);
         }
         return {};
     });
@@ -1722,15 +1720,13 @@ function DeployResourceGroupScope(azPath, resourceGroupName, template, deploymen
             if (commandStdErr.trim().length !== 0) {
                 core.error(commandStdErr);
             }
-            else {
-                if (deploymentCode != 0) {
-                    core.error("Deployment failed.");
-                }
-                core.debug(commandOutput);
-                // Parse the Outputs
-                core.info("Parsing outputs...");
-                return utils_1.ParseOutputs(commandOutput);
+            if (deploymentCode != 0) {
+                core.error("Deployment failed.");
             }
+            core.debug(commandOutput);
+            // Parse the Outputs
+            core.info("Parsing outputs...");
+            return utils_1.ParseOutputs(commandOutput);
         }
         return {};
     });
@@ -1824,19 +1820,17 @@ function DeploySubscriptionScope(azPath, region, template, deploymentMode, deplo
         if (deploymentMode != "validate") {
             // execute the deployment
             core.info("Creating deployment...");
-            var deploymentCode = yield exec_1.exec(`"${azPath}" deployment sub create ${azDeployParameters} -o json`, [], deployOptions);
+            var deploymentCode = yield exec_1.exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
             if (commandStdErr.trim().length !== 0) {
                 core.error(commandStdErr);
             }
-            else {
-                if (deploymentCode != 0) {
-                    core.error("Deployment failed.");
-                }
-                core.debug(commandOutput);
-                // Parse the Outputs
-                core.info("Parsing outputs...");
-                return utils_1.ParseOutputs(commandOutput);
+            if (deploymentCode != 0) {
+                core.error("Deployment failed.");
             }
+            core.debug(commandOutput);
+            // Parse the Outputs
+            core.info("Parsing outputs...");
+            return utils_1.ParseOutputs(commandOutput);
         }
         return {};
     });
