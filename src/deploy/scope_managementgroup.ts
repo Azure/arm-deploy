@@ -66,7 +66,7 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
     if (deploymentMode != "validate") {
         // execute the deployment
         core.info("Creating deployment...")
-        var deploymentCode = await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
+        var deploymentCode = await exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
         if (commandStdErr.trim().length !== 0) {
             core.error(commandStdErr)
         } else {
