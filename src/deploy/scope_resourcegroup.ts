@@ -71,6 +71,7 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
         var deploymentCode = await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
         if (commandStdErr.trim().length !== 0) {
             core.error(commandStdErr)
+            throw new Error("Throwing error as stderr is not null: " + commandStdErr)
         } else {
             if (deploymentCode != 0) {
                 core.error("Deployment failed.")
