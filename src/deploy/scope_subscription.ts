@@ -68,7 +68,6 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
         core.info("Creating deployment...")
         var deploymentCode = await exec(`"${azPath}" deployment sub create ${azDeployParameters} -o json`, [], deployOptions);
         if (commandStdErr.trim().length !== 0) {
-            core.error(commandStdErr)
             throw new Error(`Deployment process failed as some lines were written to stderr: ${commandStdErr}`)
         } else {
             if (deploymentCode != 0) {
