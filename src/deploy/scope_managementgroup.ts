@@ -34,7 +34,6 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
         listeners: {
             stderr: (data: BufferSource) => {
                 commandStdErr += data.toString();
-                //core.error(data.toString());
             },
             stdout: (data: BufferSource) => {
                 commandOutput += data.toString();

@@ -34,7 +34,6 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
         listeners: {
             stderr: (data: BufferSource) => {
                 commandStdErr += data.toString();
-                //core.error(data.toString());
             },
             stdout: (data: BufferSource) => {
                 commandOutput += data.toString();

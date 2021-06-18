@@ -36,7 +36,6 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
         listeners: {
             stderr: (data: BufferSource) => {
                 commandStdErr += data.toString();
-                //core.error(data.toString());
             },
             stdout: (data: BufferSource) => {
                 commandOutput += data.toString();
