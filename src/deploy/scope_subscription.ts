@@ -26,17 +26,17 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
 
     // configure exec to write the json output to a buffer
     let commandOutput = '';
+    let commandStdErr = '';
     const deployOptions: ExecOptions = {
         silent: true,
         ignoreReturnCode: true,
-        failOnStdErr: true,
+        failOnStdErr: false,
         listeners: {
             stderr: (data: BufferSource) => {
-                core.error(data.toString());
+                commandStdErr += data.toString();
             },
             stdout: (data: BufferSource) => {
                 commandOutput += data.toString();
-                // console.log(data.toString());
             },
             debug: (data: string) => {
                 core.debug(data);
@@ -66,14 +66,18 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
         // execute the deployment
         core.info("Creating deployment...")
         var deploymentCode = await exec(`"${azPath}" deployment sub create ${azDeployParameters} -o json`, [], deployOptions);
-        if (deploymentCode != 0) {
-            core.error("Deployment failed.")
+        if (commandStdErr.trim().length !== 0) {
+            throw new Error(`Deployment process failed as some lines were written to stderr: ${commandStdErr}`)
+        } else {
+            if (deploymentCode != 0) {
+                core.error("Deployment failed.")
+            }
+            core.debug(commandOutput);
+    
+            // Parse the Outputs
+            core.info("Parsing outputs...")
+            return ParseOutputs(commandOutput)
         }
-        core.debug(commandOutput);
-
-        // Parse the Outputs
-        core.info("Parsing outputs...")
-        return ParseOutputs(commandOutput)
     }
     return {}
 }
