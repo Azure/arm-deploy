@@ -23,8 +23,8 @@ jobs:
           INPUT_SCOPE: resourcegroup
           INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
           INPUT_RESOURCEGROUPNAME: E2eTestResourceGroupForArmAction
-          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-webapp-basic-linux/azuredeploy.json
-          INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-webapp-basic-linux/azuredeploy.parameters.json
+          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.json
+          INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json
           INPUT_DEPLOYMENTNAME: github-test-rg
           INPUT_DEPLOYMENTMODE: Complete
         run: ts-node test/main.tests.ts
@@ -54,8 +54,8 @@ jobs:
           INPUT_SCOPE: resourcegroup
           INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
           INPUT_RESOURCEGROUPNAME: E2eTestResourceGroupForArmAction
-          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-webapp-basic-linux/azuredeploy.json
-          INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-webapp-basic-linux/azuredeploy.parameters.json
+          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.json
+          INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json
           INPUT_DEPLOYMENTNAME: github-test-rg
           INPUT_DEPLOYMENTMODE: Validate
         run: ts-node test/main.tests.ts
