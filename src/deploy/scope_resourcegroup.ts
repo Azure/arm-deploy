@@ -3,7 +3,7 @@ import { exec } from '@actions/exec';
 import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 
-export async function DeployResourceGroupScope(azPath: string, resourceGroupName: string, template: string, deploymentMode: string, deploymentName: string, parameters: string): Promise<Outputs> {
+export async function DeployResourceGroupScope(azPath: string, resourceGroupName: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, failOnStdError: string): Promise<Outputs> {
     // Check if resourceGroupName is set
     if (!resourceGroupName) {
         throw Error("ResourceGroup name must be set.")
@@ -36,7 +36,6 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
         listeners: {
             stderr: (data: BufferSource) => {
                 commandStdErr += data.toString();
-                //core.error(data.toString());
             },
             stdout: (data: BufferSource) => {
                 commandOutput += data.toString();
@@ -70,7 +69,11 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
         core.info("Creating deployment...")
         var deploymentCode = await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
         if (commandStdErr.trim().length !== 0) {
-            throw new Error(`Deployment process failed as some lines were written to stderr: ${commandStdErr}`)
+            if (failOnStdError.toLowerCase().trim() == "true") {
+                throw new Error(`Deployment process failed as some lines were written to stderr: ${commandStdErr}`)
+            } else {
+                core.error(commandStdErr)
+            }
         } else {
             if (deploymentCode != 0) {
                 core.error("Deployment failed.")

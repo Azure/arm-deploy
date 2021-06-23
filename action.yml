@@ -28,6 +28,10 @@ inputs:
   parameters:
     description: "Supply deployment parameter values."
     required: false
+  failOnStdError:
+    description: "Specify whether to fail the action when std error is not null."
+    required: false
+    default: true
 branding:
   color: orange
   icon: package
