@@ -81,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ResourceGroupName: github-action-arm-rg
-      ResourceGroupLocation: "Australia East"
+      ResourceGroupLocation: "australiaeast"
     steps:
     - uses: actions/checkout@master
     - uses: azure/login@v1
