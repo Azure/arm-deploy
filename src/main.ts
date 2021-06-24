@@ -40,7 +40,7 @@ export async function main(): Promise<Outputs> {
             failOnStdErrBool = false
             break
         default:
-            throw new Error("Invalid failOnStdErr. Valid values are: true, false")
+            failOnStdErrBool = true
     }
 
     // Run the Deployment
