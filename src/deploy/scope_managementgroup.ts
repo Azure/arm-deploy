@@ -3,7 +3,7 @@ import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 import * as core from '@actions/core';
 
-export async function DeployManagementGroupScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string, failOnStdError: string): Promise<Outputs> {
+export async function DeployManagementGroupScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string, failOnStdErr: Boolean): Promise<Outputs> {
     // Check if region is set
     if (!region) {
         throw Error("Region must be set.")
@@ -66,22 +66,23 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
         // execute the deployment
         core.info("Creating deployment...")
         var deploymentCode = await exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
-        if (commandStdErr.trim().length !== 0) {
-            if (failOnStdError.toLowerCase().trim() == "true") {
+        
+        if (deploymentCode == 0 && commandStdErr.trim().length !== 0) {
+            if (failOnStdErr) {
                 throw new Error(`Deployment process failed as some lines were written to stderr: ${commandStdErr}`)
             } else {
                 core.error(commandStdErr)
             }
-        } else {
-            if (deploymentCode != 0) {
-                core.error("Deployment failed.")
+        } else if (deploymentCode != 0) {
+            if (commandStdErr.trim().length !== 0) {
+                core.error(commandStdErr)
             }
-            core.debug(commandOutput);
-    
-            // Parse the Outputs
-            core.info("Parsing outputs...")
-            return ParseOutputs(commandOutput)
+            throw new Error("Deployment failed.")
         }
+
+        core.debug(commandOutput);
+        core.info("Parsing outputs...")
+        return ParseOutputs(commandOutput)
     }
     return {}
 }

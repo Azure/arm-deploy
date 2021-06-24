@@ -28,8 +28,8 @@ inputs:
   parameters:
     description: "Supply deployment parameter values."
     required: false
-  failOnStdError:
-    description: "Specify whether to fail the action when std error is not null."
+  failOnStdErr:
+    description: "Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false"
     required: false
     default: true
 branding:
