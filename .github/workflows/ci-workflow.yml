@@ -27,20 +27,6 @@ jobs:
           INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json
           INPUT_DEPLOYMENTNAME: github-test-rg
           INPUT_DEPLOYMENTMODE: Complete
-          EXPECTED_TO: pass
-        run: ts-node test/main.tests.ts
-      
-      - name: Resource group scope test - Negative
-        env:
-          INPUT_SCOPE: resourcegroup
-          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
-          INPUT_RESOURCEGROUPNAME: E2eTestResourceGroupForArmAction
-          INPUT_TEMPLATE: ./test/resourceGroup-Negative/template.json
-          INPUT_PARAMETERS: ./test/resourceGroup-Negative/parameters.json
-          INPUT_REGION: eastasia
-          INPUT_DEPLOYMENTNAME: github-test-rg
-          INPUT_DEPLOYMENTMODE: Complete
-          EXPECTED_TO: fail
         run: ts-node test/main.tests.ts
 
       - name: Management group scope test
@@ -51,7 +37,6 @@ jobs:
           INPUT_TEMPLATE: ./test/template.json
           INPUT_PARAMETERS: ./test/parameters.json
           INPUT_DEPLOYMENTNAME: github-test-mg
-          EXPECTED_TO: pass
         run: ts-node test/main.tests.ts
 
       - name: Subscription scope test
@@ -62,18 +47,6 @@ jobs:
           INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/emptyRG.json
           INPUT_PARAMETERS: rgName=demoResourceGroup rgLocation=centralus
           INPUT_DEPLOYMENTNAME: github-test-subs
-          EXPECTED_TO: fail
-        run: ts-node test/main.tests.ts
-      
-      - name: Subscription scope test - Negative
-        env:
-          INPUT_SCOPE: subscription
-          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
-          INPUT_REGION: centralus
-          INPUT_TEMPLATE: ./test/subscription-Negative/template.json
-          INPUT_PARAMETERS: rgName=demoResourceGroup rgLocation=centralus
-          INPUT_DEPLOYMENTNAME: github-test-subs
-          EXPECTED_TO: pass
         run: ts-node test/main.tests.ts
 
       - name: Validate mode test
@@ -85,5 +58,4 @@ jobs:
           INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json
           INPUT_DEPLOYMENTNAME: github-test-rg
           INPUT_DEPLOYMENTMODE: Validate
-          EXPECTED_TO: pass
         run: ts-node test/main.tests.ts

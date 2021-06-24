@@ -1,4 +1,5 @@
 import { main } from "../src/main";
+import * as assert from 'assert';
 
 // Unit Tests
 export async function runTests() {
@@ -10,8 +11,6 @@ export async function runTests() {
 }
 
 runTests().catch(e => {
-    if(process.env.EXPECTED_TO === 'pass'){
-        console.error(e)
-        process.exit(1)
-    }
+    console.error(e)
+    process.exit(1)
 })
