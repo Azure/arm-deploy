@@ -152,7 +152,7 @@ In this example, we are setting `failOnStdErr` to false.
     deploymentName: github-advanced-test
     failOnStdErr: false
 ```
-The default value of `failOnStdErr` is true to support back compatibility. `failOnStdErr` equals true means that if there is some data written to stdErr and return code from az-cli is 0 then we will fail the action. 
+`failOnStdErr` equals true means that if there is some data written to stdErr and return code from az-cli is 0 then we will fail the action. 
 
 `failOnStdErr` equals false means that if there is some data written to stdErr and return code from az-cli is 0 then action will be return a success. This input is added to support cases where stdErr is being used to stream warnings. 
 

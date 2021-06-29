@@ -28,14 +28,19 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
 
     // configure exec to write the json output to a buffer
     let commandOutput = '';
-    let commandStdErr = '';
+    let commandStdErr = false;
     const deployOptions: ExecOptions = {
         silent: true,
         ignoreReturnCode: true,
         failOnStdErr: false,
         listeners: {
             stderr: (data: BufferSource) => {
-                commandStdErr += data.toString();
+                let error = data.toString();
+                if(error && error.trim().length !== 0)
+                {
+                    commandStdErr = true;
+                    core.error(error);
+                }
             },
             stdout: (data: BufferSource) => {
                 commandOutput += data.toString();
@@ -69,19 +74,13 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
         core.info("Creating deployment...")
         var deploymentCode = await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
         
-        if (deploymentCode == 0 && commandStdErr.trim().length !== 0) {
-            if (failOnStdErr) {
-                throw new Error(`Deployment process failed as some lines were written to stderr: ${commandStdErr}`)
-            } else {
-                core.error(commandStdErr)
-            }
-        } else if (deploymentCode != 0) {
-            if (commandStdErr.trim().length !== 0) {
-                core.error(commandStdErr)
-            }
+        if (deploymentCode != 0) {
             throw new Error("Deployment failed.")
         }
-
+        if(commandStdErr && failOnStdErr) {
+            throw new Error("Deployment process failed as some lines were written to stderr");
+        }
+        
         core.debug(commandOutput);
         core.info("Parsing outputs...")
         return ParseOutputs(commandOutput)
