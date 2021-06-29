@@ -152,11 +152,11 @@ In this example, we are setting `failOnStdErr` to false.
     deploymentName: github-advanced-test
     failOnStdErr: false
 ```
-`failOnStdErr` equals true means that if there is some data written to stdErr and return code from az-cli is 0 then we will fail the action. 
+`failOnStdErr` equals true implied that if some data is written to stdErr and exit code from az-cli is 0, then action execution will fail.
 
-`failOnStdErr` equals false means that if there is some data written to stdErr and return code from az-cli is 0 then action will be return a success. This input is added to support cases where stdErr is being used to stream warnings. 
+`failOnStdErr` equals false implies that if some data is written to stdErr and return code from az-cli is 0, then action will continue execution. This input is added to support cases where stdErr is being used to stream warning or progress info. 
 
-Return code 1 will always lead to failure of action irrespective the value of `failOnStdErr`.
+Non zero Exit code will always lead to failure of action irrespective the value of `failOnStdErr`.
 
 For more examples, refer : [Example Guide](https://github.com/Azure/arm-deploy/blob/main/examples/exampleGuide.md)
 
