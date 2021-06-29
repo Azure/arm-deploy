@@ -20,8 +20,7 @@ This action can be used to deploy Azure Resource Manager templates at different 
 * `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values. Or local / remote value file.  
 * `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate` (only validates the template). 
 * `deploymentName`: Specifies the name of the resource group deployment to create.
-
-
+* `failOnStdErr`: Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
 
 ## Outputs
 Every template output will be exported as output. 
@@ -139,6 +138,25 @@ If we now add a Shell script with a simple echo from that value, we can see that
 ```
 
 ARM Deploy Actions is supported for the Azure public cloud as well as Azure government clouds ('AzureUSGovernment' or 'AzureChinaCloud') and Azure Stack ('AzureStack') Hub. Before running this action, login to the respective Azure Cloud  using [Azure Login](https://github.com/Azure/login) by setting appropriate value for the `environment` parameter.
+
+## Example on how to use failOnStdErr
+In this example, we are setting `failOnStdErr` to false. 
+
+```yaml
+- uses: azure/arm-deploy@v1
+  id: deploy
+  with:
+    resourceGroupName: azurearmaction
+    template: examples/template/template.json
+    parameters: examples/template/parameters.json
+    deploymentName: github-advanced-test
+    failOnStdErr: false
+```
+`failOnStdErr` equals true implied that if some data is written to stdErr and exit code from az-cli is 0, then action execution will fail.
+
+`failOnStdErr` equals false implies that if some data is written to stdErr and return code from az-cli is 0, then action will continue execution. This input is added to support cases where stdErr is being used to stream warning or progress info. 
+
+Non zero Exit code will always lead to failure of action irrespective the value of `failOnStdErr`.
 
 For more examples, refer : [Example Guide](https://github.com/Azure/arm-deploy/blob/main/examples/exampleGuide.md)
 

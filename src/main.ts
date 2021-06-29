@@ -1,11 +1,10 @@
-import { info } from '@actions/core';
+import { getBooleanInput, info, getInput } from '@actions/core';
 import { which } from '@actions/io';
 import { DeployResourceGroupScope } from './deploy/scope_resourcegroup';
 import { exec } from '@actions/exec';
 import { DeployManagementGroupScope } from './deploy/scope_managementgroup';
 import { DeploySubscriptionScope } from './deploy/scope_subscription';
 import { Outputs } from './utils/utils';
-import { getInput } from '@actions/core';
 
 // Action Main code
 export async function main(): Promise<Outputs> {
@@ -13,7 +12,7 @@ export async function main(): Promise<Outputs> {
     const azPath = await which("az", true);
 
     // retrieve action variables
-    const scope = getInput('scope')||"resourcegroup"
+    const scope = getInput('scope') || "resourcegroup"
     const subscriptionId = getInput('subscriptionId')
     const region = getInput('region')
     const resourceGroupName = getInput('resourceGroupName')
@@ -22,6 +21,13 @@ export async function main(): Promise<Outputs> {
     const deploymentName = getInput('deploymentName')
     const parameters = getInput('parameters')
     const managementGroupId = getInput('managementGroupId')
+    let failOnStdErr
+    try {
+        failOnStdErr = getBooleanInput('failOnStdErr')
+    }
+    catch (err) {
+        failOnStdErr = true
+    }
 
     // change the subscription context
     if (scope !== "managementgroup" && subscriptionId !== "") {
@@ -31,15 +37,15 @@ export async function main(): Promise<Outputs> {
 
     // Run the Deployment
     let result: Outputs = {};
-    switch(scope) {
+    switch (scope) {
         case "resourcegroup":
-            result = await DeployResourceGroupScope(azPath, resourceGroupName, template, deploymentMode, deploymentName, parameters)
+            result = await DeployResourceGroupScope(azPath, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr)
             break
         case "managementgroup":
-            result = await DeployManagementGroupScope(azPath, region, template, deploymentMode, deploymentName, parameters, managementGroupId)
+            result = await DeployManagementGroupScope(azPath, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr)
             break
         case "subscription":
-            result = await DeploySubscriptionScope(azPath, region, template, deploymentMode, deploymentName, parameters)
+            result = await DeploySubscriptionScope(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr)
             break
         default:
             throw new Error("Invalid scope. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'")
