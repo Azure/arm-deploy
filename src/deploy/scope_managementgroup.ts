@@ -3,7 +3,7 @@ import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 import * as core from '@actions/core';
 
-export async function DeployManagementGroupScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string): Promise<Outputs> {
+export async function DeployManagementGroupScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string, failOnStdErr: Boolean): Promise<Outputs> {
     // Check if region is set
     if (!region) {
         throw Error("Region must be set.")
@@ -26,14 +26,19 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
 
     // configure exec to write the json output to a buffer
     let commandOutput = '';
-    let commandStdErr = '';
+    let commandStdErr = false;
     const deployOptions: ExecOptions = {
         silent: true,
         ignoreReturnCode: true,
         failOnStdErr: false,
         listeners: {
             stderr: (data: BufferSource) => {
-                commandStdErr += data.toString();
+                let error = data.toString();
+                if(error && error.trim().length !== 0)
+                {
+                    commandStdErr = true;
+                    core.error(error);
+                }
             },
             stdout: (data: BufferSource) => {
                 commandOutput += data.toString();
@@ -66,18 +71,17 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
         // execute the deployment
         core.info("Creating deployment...")
         var deploymentCode = await exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
-        if (commandStdErr.trim().length !== 0) {
-            throw new Error(`Deployment process failed as some lines were written to stderr: ${commandStdErr}`)
-        } else {
-            if (deploymentCode != 0) {
-                core.error("Deployment failed.")
-            }
-            core.debug(commandOutput);
-    
-            // Parse the Outputs
-            core.info("Parsing outputs...")
-            return ParseOutputs(commandOutput)
+        
+        if (deploymentCode != 0) {
+            throw new Error("Deployment failed.")
         }
+        if(commandStdErr && failOnStdErr) {
+            throw new Error("Deployment process failed as some lines were written to stderr");
+        }
+        
+        core.debug(commandOutput);
+        core.info("Parsing outputs...")
+        return ParseOutputs(commandOutput)
     }
     return {}
 }
