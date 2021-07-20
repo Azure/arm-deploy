@@ -46,16 +46,16 @@ jobs:
           EXPECTED_TO: fail
         run: ts-node test/main.tests.ts
 
-      - name: Management group scope test
-        env:
-          INPUT_SCOPE: managementgroup
-          INPUT_MANAGEMENTGROUPID: E2eTestGroupForArmAction
-          INPUT_REGION: WestUS
-          INPUT_TEMPLATE: ./test/template.json
-          INPUT_PARAMETERS: ./test/parameters.json
-          INPUT_DEPLOYMENTNAME: github-test-mg
-          EXPECTED_TO: pass
-        run: ts-node test/main.tests.ts
+      # - name: Management group scope test
+      #   env:
+      #     INPUT_SCOPE: managementgroup
+      #     INPUT_MANAGEMENTGROUPID: E2eTestGroupForArmAction
+      #     INPUT_REGION: WestUS
+      #     INPUT_TEMPLATE: ./test/template.json
+      #     INPUT_PARAMETERS: ./test/parameters.json
+      #     INPUT_DEPLOYMENTNAME: github-test-mg
+      #     EXPECTED_TO: pass
+      #   run: ts-node test/main.tests.ts
 
       - name: Subscription scope test
         env:
