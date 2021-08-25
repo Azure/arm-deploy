@@ -3,7 +3,7 @@ import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 import * as core from '@actions/core';
 
-export async function DeploySubscriptionScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, failOnStdErr: Boolean): Promise<Outputs> {
+export async function DeploySubscriptionScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, failOnStdErr: boolean, showRawStdOut: boolean): Promise<Outputs> {
     // Check if region is set
     if (!region) {
         throw Error("Region must be set.")
@@ -80,8 +80,15 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
         }
         
         core.debug(commandOutput);
-        core.info("Parsing outputs...")
-        return ParseOutputs(commandOutput)
+
+        if(showRawStdOut){
+            core.info("Raw output...")
+            core.info(commandOutput);
+        }else{
+            core.debug(commandOutput);
+            core.info("Parsing outputs...")
+            return ParseOutputs(commandOutput)
+        }
     }
     return {}
 }

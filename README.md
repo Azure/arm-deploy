@@ -21,6 +21,7 @@ This action can be used to deploy Azure Resource Manager templates at different 
 * `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate` (only validates the template). 
 * `deploymentName`: Specifies the name of the resource group deployment to create.
 * `failOnStdErr`: Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
+* `showRawStdOut`: Specify whether to console raw stdout logs or parse the stdout logs. Valid values are: true, false. Default value set to false.
 
 ## Outputs
 Every template output will be exported as output. 
@@ -155,6 +156,20 @@ In this example, we are setting `failOnStdErr` to false.
 Non zero Exit code will always lead to failure of action irrespective the value of `failOnStdErr`.
 
 For more examples, refer : [Example Guide](https://github.com/Azure/arm-deploy/blob/main/examples/exampleGuide.md)
+
+## For Azure Bicep
+Use following settings for Azure Bicep
+
+```yaml
+- name: Deploy GHES
+  uses: azure/arm-deploy@v1
+  with:
+    subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+    resourceGroupName: deepak-rg
+    template: ./Bicep/main.bicep
+    failOnStdErr: false
+    showRawStdout: true
+```
 
 # Contributing
 

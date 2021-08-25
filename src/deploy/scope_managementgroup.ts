@@ -3,7 +3,7 @@ import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 import * as core from '@actions/core';
 
-export async function DeployManagementGroupScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string, failOnStdErr: Boolean): Promise<Outputs> {
+export async function DeployManagementGroupScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string, failOnStdErr: boolean, showRawStdOut: boolean): Promise<Outputs> {
     // Check if region is set
     if (!region) {
         throw Error("Region must be set.")
@@ -78,10 +78,17 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
         if(commandStdErr && failOnStdErr) {
             throw new Error("Deployment process failed as some lines were written to stderr");
         }
-        
+
         core.debug(commandOutput);
-        core.info("Parsing outputs...")
-        return ParseOutputs(commandOutput)
+
+        if(showRawStdOut){
+            core.info("Raw output...")
+            core.info(commandOutput);
+        }else{
+            core.debug(commandOutput);
+            core.info("Parsing outputs...")
+            return ParseOutputs(commandOutput)
+        }
     }
     return {}
 }

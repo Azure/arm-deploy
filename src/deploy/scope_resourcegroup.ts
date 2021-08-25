@@ -3,7 +3,7 @@ import { exec } from '@actions/exec';
 import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 
-export async function DeployResourceGroupScope(azPath: string, resourceGroupName: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, failOnStdErr: Boolean): Promise<Outputs> {
+export async function DeployResourceGroupScope(azPath: string, resourceGroupName: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, failOnStdErr: boolean, showRawStdOut: boolean): Promise<Outputs> {
     // Check if resourceGroupName is set
     if (!resourceGroupName) {
         throw Error("ResourceGroup name must be set.")
@@ -80,10 +80,17 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
         if(commandStdErr && failOnStdErr) {
             throw new Error("Deployment process failed as some lines were written to stderr");
         }
-        
+
         core.debug(commandOutput);
-        core.info("Parsing outputs...")
-        return ParseOutputs(commandOutput)
+
+        if(showRawStdOut){
+            core.info("Raw output...")
+            core.info(commandOutput);
+        }else{
+            core.debug(commandOutput);
+            core.info("Parsing outputs...")
+            return ParseOutputs(commandOutput)
+        }
     }
     return {}
 }
