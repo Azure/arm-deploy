@@ -7,7 +7,7 @@ export function ParseOutputs(commandOutput: string): Outputs {
     var object = result.properties.outputs
     for (const key in object) {
         if (object.hasOwnProperty(key)) {
-            core.setOutput(key, object[key].value)
+            console.log(`${key}: ${JSON.stringify(object[key].value)} `)
         }
     }
 
