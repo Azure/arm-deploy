@@ -10,7 +10,7 @@ export async function runTests() {
         }
         return 'pass'
     } catch (e) {
-        core.error(JSON.stringify(e))
+        // core.error(JSON.stringify(e))
         return 'fail'
     }
 }
@@ -19,5 +19,7 @@ runTests().then(outcome => {
     if(outcome != process.env.EXPECTED_TO){
         core.error(`Expected outcome did not meet the real outcome. Expected value: ${process.env.EXPECTED_TO}, actual value: ${outcome}`)
         process.exit(1)
+    }else{
+        process.exit(0)
     }
 })
