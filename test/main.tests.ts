@@ -6,11 +6,11 @@ export async function runTests() {
     try {
         let result = await main()
         if (result) {
-            console.log(result)
+            console.log(result);
         }
         return 'pass'
     } catch (e) {
-        core.error(e)
+        core.error(JSON.stringify(e))
         return 'fail'
     }
 }
