@@ -4,6 +4,8 @@ A GitHub Action to deploy ARM templates. With this action you can automate your 
 
 This action can be used to deploy Azure Resource Manager templates at different [deployment scopes](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope) -  resource group deployment scope, subscription deployment scope and management group deployment scopes. 
 
+By default, the action only parses the output and does not print them out. In order to get the values of ```outputs```use [this](https://github.com/Azure/arm-deploy#another-example-on-how-to-use-this-action-to-get-the-output-of-arm-template).
+
 ## Dependencies
 
 * [Azure Login](https://github.com/Azure/login) Login with your Azure credentials
