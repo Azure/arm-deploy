@@ -62,7 +62,7 @@ jobs:
           INPUT_SCOPE: subscription
           INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
           INPUT_REGION: centralus
-          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/emptyRG.json
+          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/emptyrg.json
           INPUT_PARAMETERS: rgName=demoResourceGroup rgLocation=centralus
           INPUT_DEPLOYMENTNAME: github-test-subs
           EXPECTED_TO: pass
