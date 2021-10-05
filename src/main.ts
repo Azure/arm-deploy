@@ -24,6 +24,7 @@ export async function main(): Promise<Outputs> {
     const deploymentName = getInput('deploymentName')
     const parameters = getInput('parameters')
     const managementGroupId = getInput('managementGroupId')
+    const excludeChangeTypes = getInput('excludeChangeTypes')
     let failOnStdErr
     try {
         failOnStdErr = getBooleanInput('failOnStdErr')
@@ -45,13 +46,13 @@ export async function main(): Promise<Outputs> {
         case "what-if":
             switch (scope) {
                 case "resourcegroup":
-                    result = await WhatIfResourceGroupScope(azPath, resourceGroupName, template, deploymentName, parameters, failOnStdErr)
+                    result = await WhatIfResourceGroupScope(azPath, resourceGroupName, template, deploymentName, parameters, failOnStdErr, excludeChangeTypes)
                     break
                 case "managementgroup":
-                    result = await WhatIfManagementGroupScope(azPath, region, template, deploymentName, parameters, managementGroupId, failOnStdErr)
+                    result = await WhatIfManagementGroupScope(azPath, region, template, deploymentName, parameters, managementGroupId, failOnStdErr, excludeChangeTypes)
                     break
                 case "subscription":
-                    result = await WhatIfSubscriptionScope(azPath, region, template, deploymentName, parameters, failOnStdErr)
+                    result = await WhatIfSubscriptionScope(azPath, region, template, deploymentName, parameters, failOnStdErr, excludeChangeTypes)
                     break
                 default:
                     throw new Error("Invalid scope. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'")

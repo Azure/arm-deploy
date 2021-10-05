@@ -1,9 +1,9 @@
 import { exec } from '@actions/exec';
 import { ExecOptions } from '@actions/exec/lib/interfaces';
-import { Outputs } from '../utils/utils';
+import { ParseOutputs, Outputs } from '../utils/utils';
 import * as core from '@actions/core';
 
-export async function WhatIfManagementGroupScope(azPath: string, region: string, template: string, deploymentName: string, parameters: string, managementGroupId: string, failOnStdErr: Boolean): Promise<Outputs> {
+export async function WhatIfManagementGroupScope(azPath: string, region: string, template: string, deploymentName: string, parameters: string, managementGroupId: string, failOnStdErr: Boolean, excludeChangeTypes: String): Promise<Outputs> {
     // Check if region is set
     if (!region) {
         throw Error("Region must be set.")
@@ -17,7 +17,8 @@ export async function WhatIfManagementGroupScope(azPath: string, region: string,
             : undefined,
         managementGroupId ? `--management-group-id "${managementGroupId}"` : undefined,
         deploymentName ? `--name "${deploymentName}"` : undefined,
-        parameters ? `--parameters ${parameters}` : undefined
+        parameters ? `--parameters ${parameters}` : undefined,
+        excludeChangeTypes ? `--exclude-change-types ${excludeChangeTypes}` : undefined
     ].filter(Boolean).join(' ');
 
     // configure exec to write the json output to a buffer
