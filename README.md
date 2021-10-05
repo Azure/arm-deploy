@@ -21,6 +21,7 @@ This action can be used to deploy Azure Resource Manager templates at different 
 * `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate` (only validates the template) or `what-if`(to preview changes). 
 * `deploymentName`: Specifies the name of the resource group deployment to create.
 * `failOnStdErr`: Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
+* `excludeChangeTypes`: Space-separated list of resource change types to be excluded from What-If results. Valid values: Create, Delete, Deploy, Ignore, Modify, NoChange, Unsupported
 
 More info on `what-if` can be found [here](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-what-if?tabs=azure-powershell)
 

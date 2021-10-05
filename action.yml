@@ -32,6 +32,9 @@ inputs:
     description: "Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false"
     required: false
     default: true
+  excludeChangeTypes: 
+    description: "Space-separated list of resource change types to be excluded from What-If results. Valid values: Create, Delete, Deploy, Ignore, Modify, NoChange, Unsupported"
+    required: false
 branding:
   color: orange
   icon: package

@@ -3,7 +3,7 @@ import { exec } from '@actions/exec';
 import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 
-export async function WhatIfResourceGroupScope(azPath: string, resourceGroupName: string, template: string, deploymentName: string, parameters: string, failOnStdErr: Boolean): Promise<Outputs> {
+export async function WhatIfResourceGroupScope(azPath: string, resourceGroupName: string, template: string, deploymentName: string, parameters: string, failOnStdErr: Boolean, excludeChangeTypes: String): Promise<Outputs> {
     // Check if resourceGroupName is set
     if (!resourceGroupName) {
         throw Error("ResourceGroup name must be set.")
@@ -16,7 +16,8 @@ export async function WhatIfResourceGroupScope(azPath: string, resourceGroupName
             template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
             : undefined,
         deploymentName ? `--name "${deploymentName}"` : undefined,
-        parameters ? `--parameters ${parameters}` : undefined
+        parameters ? `--parameters ${parameters}` : undefined,
+        excludeChangeTypes ? `--exclude-change-types ${excludeChangeTypes}` : undefined
     ].filter(Boolean).join(' ');
 
     // configure exec to write the json output to a buffer

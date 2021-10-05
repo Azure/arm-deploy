@@ -3,7 +3,7 @@ import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 import * as core from '@actions/core';
 
-export async function WhatIfSubscriptionScope(azPath: string, region: string, template: string, deploymentName: string, parameters: string, failOnStdErr: Boolean): Promise<Outputs> {
+export async function WhatIfSubscriptionScope(azPath: string, region: string, template: string, deploymentName: string, parameters: string, failOnStdErr: Boolean, excludeChangeTypes: String): Promise<Outputs> {
     // Check if region is set
     if (!region) {
         throw Error("Region must be set.")
@@ -16,7 +16,8 @@ export async function WhatIfSubscriptionScope(azPath: string, region: string, te
             template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
             : undefined,
         deploymentName ? `--name "${deploymentName}"` : undefined,
-        parameters ? `--parameters ${parameters}` : undefined
+        parameters ? `--parameters ${parameters}` : undefined,
+        excludeChangeTypes ? `--exclude-change-types ${excludeChangeTypes}` : undefined
     ].filter(Boolean).join(' ');
 
     // configure exec to write the json output to a buffer
