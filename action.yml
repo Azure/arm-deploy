@@ -20,7 +20,7 @@ inputs:
     description: "Specify the path or URL to the Azure Resource Manager template."
     required: true
   deploymentMode:
-    description: "Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template)."
+    description: "Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template) or what-if (to preview changes)"
     required: false
   deploymentName:
     description: "Specifies the name of the resource group deployment to create."
