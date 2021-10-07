@@ -17,7 +17,7 @@ This action can be used to deploy Azure Resource Manager templates at different 
 * `managementGroupId`: **Conditional** Specify the Management Group ID, only required for Management Group Deployments.
 * `region`: **Conditional** Provide the target region, only required for Management Group or Subscription deployments.
 * `template`: **Required** Specify the path or URL to the Azure Resource Manager template.
-* `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values. Or local / remote value file.  
+* `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values file (local / remote) and/or specify local overrides.  
 * `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate` (only validates the template). 
 * `deploymentName`: Specifies the name of the resource group deployment to create.
 * `failOnStdErr`: Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
@@ -53,7 +53,7 @@ jobs:
       with:
         resourceGroupName: github-action-arm-rg
         template: ./azuredeploy.json
-        parameters: storageAccountType=Standard_LRS
+        parameters: examples/template/parameters.json storageAccountType=Standard_LRS sqlServerPassword=${{ secrets.SQL_SERVER }}
 ```
 
 ## Another example which ensures the Azure Resource Group exists before ARM deployment
