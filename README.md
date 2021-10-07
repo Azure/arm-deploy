@@ -56,7 +56,7 @@ jobs:
       with:
         resourceGroupName: github-action-arm-rg
         template: ./azuredeploy.json
-        parameters: storageAccountType=Standard_LRS
+        parameters: examples/template/parameters.json storageAccountType=Standard_LRS sqlServerPassword=${{ secrets.SQL_SERVER }}
 ```
 
 ## Another example which ensures the Azure Resource Group exists before ARM deployment
