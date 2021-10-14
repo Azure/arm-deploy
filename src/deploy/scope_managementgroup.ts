@@ -3,7 +3,7 @@ import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 import * as core from '@actions/core';
 
-export async function DeployManagementGroupScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string, failOnStdErr: Boolean): Promise<Outputs> {
+export async function DeployManagementGroupScope(azPath: string, region: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, managementGroupId: string, failOnStdErr: Boolean, excludeChangeTypes: String): Promise<Outputs> {
     // Check if region is set
     if (!region) {
         throw Error("Region must be set.")
@@ -21,7 +21,8 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
             : undefined,
         managementGroupId ? `--management-group-id "${managementGroupId}"` : undefined,
         deploymentName ? `--name "${deploymentName}"` : undefined,
-        parameters ? `--parameters ${parameters}` : undefined
+        parameters ? `--parameters ${parameters}` : undefined,
+        excludeChangeTypes ? `--exclude-change-types ${excludeChangeTypes}` : undefined
     ].filter(Boolean).join(' ');
 
     // configure exec to write the json output to a buffer
@@ -34,8 +35,7 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
         listeners: {
             stderr: (data: BufferSource) => {
                 let error = data.toString();
-                if(error && error.trim().length !== 0)
-                {
+                if (error && error.trim().length !== 0) {
                     commandStdErr = true;
                     core.error(error);
                 }
@@ -48,40 +48,56 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
             }
         }
     }
-    const validateOptions: ExecOptions = {
-        silent: true,
-        ignoreReturnCode: true,
-        listeners: {
-            stderr: (data: BufferSource) => {
-                core.warning(data.toString());
-            },
-        }
-    }
 
-    // validate the deployment
-    core.info("Validating template...")
-    var code = await exec(`"${azPath}" deployment mg validate ${azDeployParameters} -o json`, [], validateOptions);
-    if (deploymentMode === "validate" && code != 0) {
-        throw new Error("Template validation failed.")
-    } else if (code != 0) {
-        core.warning("Template validation failed.")
-    }
+    if (deploymentMode == 'what-if') {
+        core.info("Preview Changes")
+        var deploymentCode = await exec(`"${azPath}" deployment mg what-if ${azDeployParameters} -o json`, [], deployOptions);
 
-    if (deploymentMode != "validate") {
-        // execute the deployment
-        core.info("Creating deployment...")
-        var deploymentCode = await exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
-        
         if (deploymentCode != 0) {
-            throw new Error("Deployment failed.")
+            throw new Error("What-If failed.")
         }
-        if(commandStdErr && failOnStdErr) {
+
+        if (commandStdErr && failOnStdErr) {
             throw new Error("Deployment process failed as some lines were written to stderr");
         }
-        
-        core.debug(commandOutput);
-        core.info("Parsing outputs...")
-        return ParseOutputs(commandOutput)
+
+        core.info(commandOutput);
+    } else {
+        const validateOptions: ExecOptions = {
+            silent: true,
+            ignoreReturnCode: true,
+            listeners: {
+                stderr: (data: BufferSource) => {
+                    core.warning(data.toString());
+                },
+            }
+        }
+
+        // validate the deployment
+        core.info("Validating template...")
+        var code = await exec(`"${azPath}" deployment mg validate ${azDeployParameters} -o json`, [], validateOptions);
+        if (deploymentMode === "validate" && code != 0) {
+            throw new Error("Template validation failed.")
+        } else if (code != 0) {
+            core.warning("Template validation failed.")
+        }
+
+        if (deploymentMode != "validate") {
+            // execute the deployment
+            core.info("Creating deployment...")
+            var deploymentCode = await exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
+
+            if (deploymentCode != 0) {
+                throw new Error("Deployment failed.")
+            }
+            if (commandStdErr && failOnStdErr) {
+                throw new Error("Deployment process failed as some lines were written to stderr");
+            }
+
+            core.debug(commandOutput);
+            core.info("Parsing outputs...")
+            return ParseOutputs(commandOutput)
+        }
     }
     return {}
 }
