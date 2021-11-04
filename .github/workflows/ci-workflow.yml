@@ -1,5 +1,8 @@
 name: ci-workflow
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: '0 */3 * * *'
 
 jobs:
   test_action_job:
@@ -87,3 +90,11 @@ jobs:
           INPUT_DEPLOYMENTMODE: Validate
           EXPECTED_TO: pass
         run: ts-node test/main.tests.ts
+      - name: Post to slack on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3.9.1
+        with:
+            status: ${{ job.status }}
+            fields: repo,message,author,action,ref,workflow
+        env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
