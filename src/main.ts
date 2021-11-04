@@ -21,12 +21,35 @@ export async function main(): Promise<Outputs> {
     const deploymentName = getInput('deploymentName')
     const parameters = getInput('parameters')
     const managementGroupId = getInput('managementGroupId')
+    const whatIfExcludeChangeTypes = getInput('whatIfExcludeChangeTypes')
+    const whatIfResultFormat = getInput('whatIfResultFormat')
+
     let failOnStdErr
     try {
         failOnStdErr = getBooleanInput('failOnStdErr')
     }
     catch (err) {
         failOnStdErr = true
+    }
+
+    let whatIf
+    try {
+        whatIf = getBooleanInput('whatIf')
+    }
+    catch (err) {
+        whatIf = false
+    }
+
+    let rollbackOnError
+    try {
+        rollbackOnError = getBooleanInput('rollbackOnError')
+    }
+    catch (err) {
+        rollbackOnError = getInput('rollbackOnError')
+    }
+
+    if(scope != 'resourcegroup' && rollbackOnError != false){
+        throw Error("rollbackOnError is only applicable for resourcegroup scope.")
     }
 
     // change the subscription context
@@ -39,13 +62,13 @@ export async function main(): Promise<Outputs> {
     let result: Outputs = {};
     switch (scope) {
         case "resourcegroup":
-            result = await DeployResourceGroupScope(azPath, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr)
+            result = await DeployResourceGroupScope(azPath, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, whatIf, whatIfExcludeChangeTypes, whatIfResultFormat, rollbackOnError)
             break
         case "managementgroup":
-            result = await DeployManagementGroupScope(azPath, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr)
+            result = await DeployManagementGroupScope(azPath, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, whatIf, whatIfExcludeChangeTypes, whatIfResultFormat)
             break
         case "subscription":
-            result = await DeploySubscriptionScope(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr)
+            result = await DeploySubscriptionScope(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, whatIf, whatIfExcludeChangeTypes, whatIfResultFormat)
             break
         default:
             throw new Error("Invalid scope. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'")

@@ -20,7 +20,13 @@ This action can be used to deploy Azure Resource Manager templates at different 
 * `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values file (local / remote) and/or specify local overrides.  
 * `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate` (only validates the template). 
 * `deploymentName`: Specifies the name of the resource group deployment to create.
-* `failOnStdErr`: Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
+* `failOnStdErr`: **Conditional** Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
+* `whatIf`: **Conditional** Instruct the command to run deployment What-If. Valid values are: true, false. Default value set to false.
+* `whatIfExcludeChangeTypes`: **Conditional** Space-separated list of resource change types to be excluded from What-If results. Valid values: Create, Delete, Deploy, Ignore, Modify, NoChange, Unsupported.
+* `whatIfResultFormat`: **Conditional** The format of What-If results. Valid values: FullResourcePayloads, ResourceIdOnly. Default value: FullResourcePayloads.
+* `rollbackOnError`: **Conditional** The name of a deployment to roll back to on error, or use as a flag to roll back to the last successful deployment. This parameter is only available for resourceGroup scope. Valid values are: true, false or name of a deployment. Default value set to false.
+
+More info on parameters can be found [here](https://docs.microsoft.com/en-us/cli/azure/deployment/group?view=azure-cli-latest#az_deployment_group_create-optional-parameters)
 
 ## Outputs
 Every template output will be exported as output. 
@@ -153,6 +159,24 @@ In this example, we are setting `failOnStdErr` to false.
 `failOnStdErr` equals false implies that if some data is written to stdErr and return code from az-cli is 0, then action will continue execution. This input is added to support cases where stdErr is being used to stream warning or progress info. 
 
 Non zero Exit code will always lead to failure of action irrespective the value of `failOnStdErr`.
+
+## Example on how to use whatIf
+In this example, we are setting `failOnStdErr` to false. 
+
+```yaml
+- uses: azure/arm-deploy@v1
+  id: deploy
+  with:
+    resourceGroupName: azurearmaction
+    template: examples/template/template.json
+    parameters: examples/template/parameters.json
+    deploymentName: github-advanced-test
+    whatIf: true
+    whatIfExcludeChangeTypes: Ignore, NoChange, Unsupported
+    whatIfResultFormat: ResourceIdOnly
+```
+
+The above example will console the preview of the changes that will happen with the specified template with Ignore, NoChange and Unsupported chanegs excluded from the result. As whatIfResultFormat is set to ResourceIdOnly only resource Ids will be visible as part of the preview. 
 
 For more examples, refer : [Example Guide](https://github.com/Azure/arm-deploy/blob/main/examples/exampleGuide.md)
 
