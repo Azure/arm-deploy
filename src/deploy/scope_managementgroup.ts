@@ -64,14 +64,14 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
     if (!whatIf) {
         core.info("Validating template...")
         var code = await exec(`"${azPath}" deployment mg validate ${azDeployParameters} -o json`, [], validateOptions);
-        if (deploymentMode === "validate" && code != 0) {
+        if (deploymentMode.toLowerCase() === "validate" && code != 0) {
             throw new Error("Template validation failed.")
         } else if (code != 0) {
             core.warning("Template validation failed.")
         }
     }
     
-    if (deploymentMode != "validate") {
+    if (deploymentMode.toLowerCase() != "validate") {
         // execute the deployment
         core.info("Creating deployment...")
         var deploymentCode = await exec(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
