@@ -21,6 +21,7 @@ export async function main(): Promise<Outputs> {
     const deploymentName = getInput('deploymentName')
     const parameters = getInput('parameters')
     const managementGroupId = getInput('managementGroupId')
+    const additionalArguments = getInput('additionalArguments')
     let failOnStdErr
     try {
         failOnStdErr = getBooleanInput('failOnStdErr')
@@ -39,13 +40,13 @@ export async function main(): Promise<Outputs> {
     let result: Outputs = {};
     switch (scope) {
         case "resourcegroup":
-            result = await DeployResourceGroupScope(azPath, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr)
+            result = await DeployResourceGroupScope(azPath, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments)
             break
         case "managementgroup":
-            result = await DeployManagementGroupScope(azPath, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr)
+            result = await DeployManagementGroupScope(azPath, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, additionalArguments)
             break
         case "subscription":
-            result = await DeploySubscriptionScope(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr)
+            result = await DeploySubscriptionScope(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments)
             break
         default:
             throw new Error("Invalid scope. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'")
