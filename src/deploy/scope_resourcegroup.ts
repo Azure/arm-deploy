@@ -3,7 +3,7 @@ import { exec } from '@actions/exec';
 import { ExecOptions } from '@actions/exec/lib/interfaces';
 import { ParseOutputs, Outputs } from '../utils/utils';
 
-export async function DeployResourceGroupScope(azPath: string, resourceGroupName: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, failOnStdErr: Boolean): Promise<Outputs> {
+export async function DeployResourceGroupScope(azPath: string, resourceGroupName: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, failOnStdErr: Boolean, additionalArguments: String): Promise<Outputs> {
     // Check if resourceGroupName is set
     if (!resourceGroupName) {
         throw Error("ResourceGroup name must be set.")
@@ -23,7 +23,8 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
             : undefined,
         deploymentMode && deploymentMode != "validate" ? `--mode ${deploymentMode}` : "--mode Incremental",
         deploymentName ? `--name "${deploymentName}"` : undefined,
-        parameters ? `--parameters ${parameters}` : undefined
+        parameters ? `--parameters ${parameters}` : undefined,
+        additionalArguments ? additionalArguments : undefined
     ].filter(Boolean).join(' ');
 
     // configure exec to write the json output to a buffer
