@@ -23,7 +23,7 @@ By default, the action only parses the output and does not print them out. In or
 * `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate` (only validates the template). 
 * `deploymentName`: Specifies the name of the resource group deployment to create.
 * `failOnStdErr`: Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
-* `additionalArguments`: Specify any additional arguments for the deployment.
+* `additionalArguments`: Specify any additional arguments for the deployment. These arguments will be ignored while `validating` the template.
 
 ## Outputs
 Every template output will either be exported as output if output is a json object else will be consoled out where output is not a json object. 
