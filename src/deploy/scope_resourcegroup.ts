@@ -16,16 +16,20 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
     }
 
     // create the parameter list
-    const azDeployParameters = [
+    const validateParameters = [
         resourceGroupName ? `--resource-group ${resourceGroupName}` : undefined,
         template ?
             template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
             : undefined,
         deploymentMode && deploymentMode != "validate" ? `--mode ${deploymentMode}` : "--mode Incremental",
         deploymentName ? `--name "${deploymentName}"` : undefined,
-        parameters ? `--parameters ${parameters}` : undefined,
-        additionalArguments ? additionalArguments : undefined
+        parameters ? `--parameters ${parameters}` : undefined
     ].filter(Boolean).join(' ');
+
+    let azDeployParameters = validateParameters;
+    if(additionalArguments){
+        azDeployParameters += additionalArguments;
+    }
 
     // configure exec to write the json output to a buffer
     let commandOutput = '';
@@ -63,7 +67,7 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
 
     // validate the deployment
     core.info("Validating template...")
-    var code = await exec(`"${azPath}" deployment group validate ${azDeployParameters} -o json`, [], validateOptions);
+    var code = await exec(`"${azPath}" deployment group validate ${validateParameters} -o json`, [], validateOptions);
     if (deploymentMode === "validate" && code != 0) {
         throw new Error("Template validation failed.")
     } else if (code != 0) {

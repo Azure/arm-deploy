@@ -15,15 +15,19 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
     }
 
     // create the parameter list
-    const azDeployParameters = [
+    const validateParameters = [
         region ? `--location "${region}"` : undefined,
         template ?
             template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
             : undefined,
         deploymentName ? `--name "${deploymentName}"` : undefined,
-        parameters ? `--parameters ${parameters}` : undefined,
-        additionalArguments ? additionalArguments : undefined
+        parameters ? `--parameters ${parameters}` : undefined
     ].filter(Boolean).join(' ');
+
+    let azDeployParameters = validateParameters;
+    if(additionalArguments){
+        azDeployParameters += additionalArguments;
+    }
 
     // configure exec to write the json output to a buffer
     let commandOutput = '';
@@ -61,7 +65,7 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
 
     // validate the deployment
     core.info("Validating template...")
-    var code = await exec(`"${azPath}" deployment sub validate ${azDeployParameters} -o json`, [], validateOptions);
+    var code = await exec(`"${azPath}" deployment sub validate ${validateParameters} -o json`, [], validateOptions);
     if (deploymentMode === "validate" && code != 0) {
         throw new Error("Template validation failed.")
     } else if (code != 0) {
