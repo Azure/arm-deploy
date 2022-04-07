@@ -14,16 +14,20 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
         core.warning("This deployment mode is not supported for management group scoped deployments, this parameter will be ignored!")
     }
     // create the parameter list
-    const azDeployParameters = [
+    const validateParameters = [
         region ? `--location "${region}"` : undefined,
         template ?
             template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
             : undefined,
         managementGroupId ? `--management-group-id "${managementGroupId}"` : undefined,
         deploymentName ? `--name "${deploymentName}"` : undefined,
-        parameters ? `--parameters ${parameters}` : undefined,
-        additionalArguments ? additionalArguments : undefined
+        parameters ? `--parameters ${parameters}` : undefined
     ].filter(Boolean).join(' ');
+
+    let azDeployParameters = validateParameters;
+    if(additionalArguments){
+        azDeployParameters += additionalArguments;
+    }
 
     // configure exec to write the json output to a buffer
     let commandOutput = '';
@@ -61,7 +65,7 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
 
     // validate the deployment
     core.info("Validating template...")
-    var code = await exec(`"${azPath}" deployment mg validate ${azDeployParameters} -o json`, [], validateOptions);
+    var code = await exec(`"${azPath}" deployment mg validate ${validateParameters} -o json`, [], validateOptions);
     if (deploymentMode === "validate" && code != 0) {
         throw new Error("Template validation failed.")
     } else if (code != 0) {
