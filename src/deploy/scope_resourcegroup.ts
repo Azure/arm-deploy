@@ -31,8 +31,6 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
         azDeployParameters += ` ${additionalArguments}`;
     }
 
-    console.log(azDeployParameters)
-
     // configure exec to write the json output to a buffer
     let commandOutput = '';
     let commandStdErr = false;
