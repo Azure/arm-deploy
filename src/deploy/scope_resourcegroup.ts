@@ -28,7 +28,7 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
 
     let azDeployParameters = validateParameters;
     if(additionalArguments){
-        azDeployParameters += additionalArguments;
+        azDeployParameters += ` ${additionalArguments}`;
     }
 
     // configure exec to write the json output to a buffer
