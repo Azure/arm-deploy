@@ -26,7 +26,7 @@ export async function DeploySubscriptionScope(azPath: string, region: string, te
 
     let azDeployParameters = validateParameters;
     if(additionalArguments){
-        azDeployParameters += additionalArguments;
+        azDeployParameters += ` ${additionalArguments}`;
     }
 
     // configure exec to write the json output to a buffer

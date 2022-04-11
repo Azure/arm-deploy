@@ -26,7 +26,7 @@ export async function DeployManagementGroupScope(azPath: string, region: string,
 
     let azDeployParameters = validateParameters;
     if(additionalArguments){
-        azDeployParameters += additionalArguments;
+        azDeployParameters += ` ${additionalArguments}`;
     }
 
     // configure exec to write the json output to a buffer
