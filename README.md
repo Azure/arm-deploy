@@ -19,7 +19,7 @@ By default, the action only parses the output and does not print them out. In or
 * `managementGroupId`: **Conditional** Specify the Management Group ID, only required for Management Group Deployments.
 * `region`: **Conditional** Provide the target region, only required for Management Group or Subscription deployments.
 * `template`: **Required** Specify the path or URL to the Azure Resource Manager template.
-* `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values. Or local / remote value file.  
+* `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values file (local / remote) and/or specify local overrides.  
 * `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate` (only validates the template). 
 * `deploymentName`: Specifies the name of the resource group deployment to create.
 * `failOnStdErr`: Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
@@ -56,13 +56,13 @@ jobs:
       with:
         resourceGroupName: github-action-arm-rg
         template: ./azuredeploy.json
-        parameters: storageAccountType=Standard_LRS
+        parameters: examples/template/parameters.json storageAccountType=Standard_LRS sqlServerPassword=${{ secrets.SQL_SERVER }}
 ```
 
 ## Another example which ensures the Azure Resource Group exists before ARM deployment
 In the preceeding example there is a pre-requisite that an existing Azure Resource Group named ```github-action-arm-rg``` must already exist.  
 
-The below example makes use of the [Azure CLI Action](https://github.com/marketplace/actions/azure-cli-action) to ensure the resource group is created before doing an ARM deployment.
+The below example makes use of the [Azure CLI Action](https://github.com/marketplace/actions/azure-cli-action) to ensure the resource group is created before doing an ARM deployment.  Note that the command `az group create` is idempotent, so it will run sucessfully even if the group already exists.
 
 ## Steps
 When generating your credentials (in this example we store in a secret named ```AZURE_CREDENTIALS```) you will need to specify a scope at the subscription level.
@@ -93,12 +93,8 @@ jobs:
       with:
         inlineScript: |
           #!/bin/bash
-          if $(az group exists --name ${{ env.ResourceGroupName }}) ; then
-            echo "Azure resource group already exists, skipping creation..."
-          else
-            az group create --name ${{ env.ResourceGroupName }} --location ${{ env.ResourceGroupLocation }}
-            echo "Azure resource group created"
-          fi
+          az group create --name ${{ env.ResourceGroupName }} --location ${{ env.ResourceGroupLocation }}
+          echo "Azure resource group created"
     - uses: azure/arm-deploy@v1
       with:
         resourceGroupName: ${{ env.ResourceGroupName }}
@@ -176,5 +172,3 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-

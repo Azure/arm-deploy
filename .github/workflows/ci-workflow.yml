@@ -46,23 +46,23 @@ jobs:
           EXPECTED_TO: fail
         run: ts-node test/main.tests.ts
 
-      - name: Management group scope test
-        env:
-          INPUT_SCOPE: managementgroup
-          INPUT_MANAGEMENTGROUPID: E2eTestGroupForArmAction
-          INPUT_REGION: WestUS
-          INPUT_TEMPLATE: ./test/template.json
-          INPUT_PARAMETERS: ./test/parameters.json
-          INPUT_DEPLOYMENTNAME: github-test-mg
-          EXPECTED_TO: pass
-        run: ts-node test/main.tests.ts
+      # - name: Management group scope test
+      #   env:
+      #     INPUT_SCOPE: managementgroup
+      #     INPUT_MANAGEMENTGROUPID: E2eTestGroupForArmAction
+      #     INPUT_REGION: WestUS
+      #     INPUT_TEMPLATE: ./test/template.json
+      #     INPUT_PARAMETERS: ./test/parameters.json
+      #     INPUT_DEPLOYMENTNAME: github-test-mg
+      #     EXPECTED_TO: pass
+      #   run: ts-node test/main.tests.ts
 
       - name: Subscription scope test
         env:
           INPUT_SCOPE: subscription
           INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
           INPUT_REGION: centralus
-          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/emptyRG.json
+          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/emptyrg.json
           INPUT_PARAMETERS: rgName=demoResourceGroup rgLocation=centralus
           INPUT_DEPLOYMENTNAME: github-test-subs
           EXPECTED_TO: pass
