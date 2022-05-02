@@ -10,7 +10,7 @@ export async function runTests() {
         }
         return 'pass'
     } catch (e) {
-        core.error(e)
+        core.error(JSON.stringify(e))
         return 'fail'
     }
 }
