@@ -25,6 +25,7 @@ By default, the action only parses the output and does not print them out. In or
 * `failOnStdErr`: Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
 * `additionalArguments`: Specify any additional arguments for the deployment. These arguments will be ignored while `validating` the template.
 
+  A good way to use additionalArguments would be to send optional parameters like `--what-if` or `--what-if-exclude-change-types`. [Read more about this here](https://docs.microsoft.com/en-us/cli/azure/deployment?view=azure-cli-latest#az-deployment-create-optional-parameters)
 ## Outputs
 Every template output will either be exported as output if output is a json object else will be consoled out where output is not a json object. 
 
@@ -57,6 +58,7 @@ jobs:
         resourceGroupName: github-action-arm-rg
         template: ./azuredeploy.json
         parameters: examples/template/parameters.json storageAccountType=Standard_LRS sqlServerPassword=${{ secrets.SQL_SERVER }}
+        additionalArguments: "--what-if --rollback-on-error --what-if-exclude-change-types Create Ignore"
 ```
 
 ## Another example which ensures the Azure Resource Group exists before ARM deployment
