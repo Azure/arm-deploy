@@ -42,7 +42,7 @@ jobs:
           INPUT_RESOURCEGROUPNAME: E2eTestResourceGroupForArmAction
           INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.json
           INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json
-          INPUT_DEPLOYMENTNAME: github-test-rg
+          INPUT_DEPLOYMENTNAME: github-test-eb-rg
           INPUT_DEPLOYMENTMODE: Complete
           EXPECTED_TO: pass
         run: ts-node test/main.tests.ts
@@ -55,7 +55,7 @@ jobs:
           INPUT_TEMPLATE: ./test/resourceGroup-Negative/template.json
           INPUT_PARAMETERS: ./test/resourceGroup-Negative/parameters.json
           INPUT_REGION: eastasia
-          INPUT_DEPLOYMENTNAME: github-test-rg
+          INPUT_DEPLOYMENTNAME: github-test-eb-rg
           INPUT_DEPLOYMENTMODE: Complete
           EXPECTED_TO: fail
         run: ts-node test/main.tests.ts
@@ -67,7 +67,7 @@ jobs:
           INPUT_REGION: centralus
           INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/emptyrg.json
           INPUT_PARAMETERS: rgName=demoResourceGroup rgLocation=centralus
-          INPUT_DEPLOYMENTNAME: github-test-subs
+          INPUT_DEPLOYMENTNAME: github-test-eb-subs
           EXPECTED_TO: pass
         run: ts-node test/main.tests.ts
       
@@ -78,7 +78,7 @@ jobs:
           INPUT_REGION: centralus
           INPUT_TEMPLATE: ./test/subscription-Negative/template.json
           INPUT_PARAMETERS: rgName=demoResourceGroup rgLocation=centralus
-          INPUT_DEPLOYMENTNAME: github-test-subs
+          INPUT_DEPLOYMENTNAME: github-test-eb-subs
           EXPECTED_TO: fail
         run: ts-node test/main.tests.ts
 
@@ -89,7 +89,7 @@ jobs:
           INPUT_RESOURCEGROUPNAME: E2eTestResourceGroupForArmAction
           INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.json
           INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json
-          INPUT_DEPLOYMENTNAME: github-test-rg
+          INPUT_DEPLOYMENTNAME: github-test-eb-rg
           INPUT_DEPLOYMENTMODE: Validate
           EXPECTED_TO: pass
         run: ts-node test/main.tests.ts
