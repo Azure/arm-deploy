@@ -3,6 +3,7 @@ on:
   push:
   schedule:
     - cron: '0 */3 * * *'
+  workflow_dispatch:
 
 jobs:
   test_action_job:
@@ -10,6 +11,19 @@ jobs:
     steps:
       - name: Check out source code
         uses: actions/checkout@v1
+      - name: Installing Az CLI Edge build 
+        run: |
+           cd ../..
+           CWD="$(pwd)"
+           python3 -m venv oidc-venv
+           . oidc-venv/bin/activate
+           echo "***********activated virual environment**********" 
+           python3 -m pip install --upgrade pip
+           echo "***************started installing cli edge build******************"
+           pip3 install -q --upgrade --pre azure-cli --extra-index-url https://azurecliprod.blob.core.windows.net/edge --no-cache-dir --upgrade-strategy=eager
+           echo "***************installed cli Edge build*******************"    
+           echo "$CWD/oidc-venv/bin" >> $GITHUB_PATH
+           az --version
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
