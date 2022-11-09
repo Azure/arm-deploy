@@ -25,6 +25,7 @@ By default, the action only parses the output and does not print them out. In or
 * `failOnStdErr`: Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
 * `additionalArguments`: Specify any additional arguments for the deployment. These arguments will be ignored while `validating` the template.
 
+  A good way to use additionalArguments would be to send optional parameters like `--what-if` or `--what-if-exclude-change-types`. [Read more about this here](https://docs.microsoft.com/en-us/cli/azure/deployment?view=azure-cli-latest#az-deployment-create-optional-parameters)
 ## Outputs
 Every template output will either be exported as output if output is a json object else will be consoled out where output is not a json object. 
 
@@ -57,6 +58,7 @@ jobs:
         resourceGroupName: github-action-arm-rg
         template: ./azuredeploy.json
         parameters: examples/template/parameters.json storageAccountType=Standard_LRS sqlServerPassword=${{ secrets.SQL_SERVER }}
+        additionalArguments: "--what-if --rollback-on-error --what-if-exclude-change-types Create Ignore"
 ```
 
 ## Another example which ensures the Azure Resource Group exists before ARM deployment
@@ -158,6 +160,9 @@ In this example, we are setting `failOnStdErr` to false.
 Non zero Exit code will always lead to failure of action irrespective the value of `failOnStdErr`.
 
 For more examples, refer : [Example Guide](https://github.com/Azure/arm-deploy/blob/main/examples/exampleGuide.md)
+
+## Az CLI dependency
+Internally in this action, we use azure CLI and execute `az login` with the credentials provided through secrets. In order to validate the new az CLI releases for this action, [canary test workflow](.github/workflows/azure-login-canary.yml) is written which will execute the action on [az CLI's edge build](https://github.com/Azure/azure-cli#edge-builds) which will fail incase of any breaking change is being introduced in the new upcoming release. The test results can be posted on a slack or teams channel using the corresponding integrations. Incase of a failure, the concern will be raised to [azure-cli](https://github.com/Azure/azure-cli) for taking a necessary action and also the latest CLI installation will be postponed in [Runner VMs](https://github.com/actions/virtual-environments) as well for hosted runner to prevent the workflows failing due to the new CLI changes.
 
 # Contributing
 
