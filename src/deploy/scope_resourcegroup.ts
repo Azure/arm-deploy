@@ -67,7 +67,12 @@ export async function DeployResourceGroupScope(azPath: string, resourceGroupName
 
     // validate the deployment
     core.info("Validating template...")
+
+    core.info(`"${azPath}" deployment group validate ${validateParameters} -o json`)
+    core.info(`validateOptions - ${validateOptions}`)
+
     var code = await exec(`"${azPath}" deployment group validate ${validateParameters} -o json`, [], validateOptions);
+
     if (deploymentMode === "validate" && code != 0) {
         throw new Error("Template validation failed.")
     } else if (code != 0) {
