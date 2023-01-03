@@ -2,6 +2,7 @@ import { getBooleanInput, info, getInput } from '@actions/core';
 import { which } from '@actions/io';
 import { DeployResourceGroupScope } from './deploy/scope_resourcegroup';
 import { exec } from '@actions/exec';
+import { DeployTenantScope } from './deploy/scope_tenant';
 import { DeployManagementGroupScope } from './deploy/scope_managementgroup';
 import { DeploySubscriptionScope } from './deploy/scope_subscription';
 import { Outputs } from './utils/utils';
@@ -31,7 +32,7 @@ export async function main(): Promise<Outputs> {
     }
 
     // change the subscription context
-    if (scope !== "managementgroup" && subscriptionId !== "") {
+    if (scope !== "tenant" && scope !== "managementgroup" && subscriptionId !== "") {
         info("Changing subscription context...")
         await exec(`"${azPath}" account set --subscription ${subscriptionId}`, [], { silent: true })
     }
@@ -41,6 +42,9 @@ export async function main(): Promise<Outputs> {
     switch (scope) {
         case "resourcegroup":
             result = await DeployResourceGroupScope(azPath, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments)
+            break
+        case "tenant":
+            result = await DeployTenantScope(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments)
             break
         case "managementgroup":
             result = await DeployManagementGroupScope(azPath, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, additionalArguments)
