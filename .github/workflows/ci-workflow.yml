@@ -80,6 +80,28 @@ jobs:
           EXPECTED_TO: fail
         run: ts-node test/main.tests.ts
 
+      - name: Tenant scope test
+        env:
+          INPUT_SCOPE: tenant
+          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
+          INPUT_REGION: centralus
+          INPUT_TEMPLATE: ./test/tenant/template.json
+          INPUT_PARAMETERS: ./test/tenant/parameters.json
+          INPUT_DEPLOYMENTNAME: github-test-ten
+          EXPECTED_TO: pass
+        run: ts-node test/main.tests.ts
+      
+      - name: Tenant scope test - Negative
+        env:
+          INPUT_SCOPE: tenant
+          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
+          INPUT_REGION: centralus
+          INPUT_TEMPLATE: ./test/tenant/negative/template.json
+          INPUT_PARAMETERS: ./test/tenant/negative/parameters.json
+          INPUT_DEPLOYMENTNAME: github-test-ten
+          EXPECTED_TO: fail
+        run: ts-node test/main.tests.ts
+
       - name: Validate mode test
         env:
           INPUT_SCOPE: resourcegroup
