@@ -2,7 +2,7 @@ name: "Deploy Azure Resource Manager (ARM) Template"
 description: "Use this GitHub Action task to deploy Azure Resource Manager (ARM) template"
 inputs:
   scope:
-    description: "Provide the scope of the deployment. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'"
+    description: "Provide the scope of the deployment. Valid values are: 'resourcegroup', 'tenant', 'managementgroup', 'subscription'"
     required: true
   subscriptionId:
     description: "Override the Subscription Id set by Azure Login."
@@ -11,7 +11,7 @@ inputs:
     description: "Specify the Id for the Management Group, only required for Management Group Deployments."
     required: false
   region:
-    description: "Provide the target region, only required for management Group or Subscription deployments."
+    description: "Provide the target region, only required for tenant, management Group or Subscription deployments."
     required: false
   resourceGroupName:
     description: "Provide the name of a resource group, only required for resource Group deployments."

@@ -53,7 +53,7 @@ export async function main(): Promise<Outputs> {
             result = await DeploySubscriptionScope(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments)
             break
         default:
-            throw new Error("Invalid scope. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'")
+            throw new Error("Invalid scope. Valid values are: 'resourcegroup', 'tenant', 'managementgroup', 'subscription'")
     }
 
     return result
