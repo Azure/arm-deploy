@@ -13,11 +13,11 @@ By default, the action only parses the output and does not print them out. In or
 
 ## Inputs
 
-* `scope`: Provide the scope of the deployment. Valid values are: `resourcegroup`(default) , `subscription`, `managementgroup`. 
+* `scope`: Provide the scope of the deployment. Valid values are: `resourcegroup`(default) , `tenant`, `subscription`, `managementgroup`. 
 * `resourceGroupName`: **Conditional** Provide the name of a resource group. Only required for Resource Group Scope
 * `subscriptionId`: **Conditional** Provide a value to override the subscription ID set by [Azure Login](https://github.com/Azure/login).
 * `managementGroupId`: **Conditional** Specify the Management Group ID, only required for Management Group Deployments.
-* `region`: **Conditional** Provide the target region, only required for Management Group or Subscription deployments.
+* `region`: **Conditional** Provide the target region, only required for Tenant, Management Group or Subscription deployments.
 * `template`: **Required** Specify the path or URL to the Azure Resource Manager template.
 * `parameters`: Specify the path or URL to the Azure Resource Manager deployment parameter values file (local / remote) and/or specify local overrides.  
 * `deploymentMode`: `Incremental`(default) (only add resources to resource group) or `Complete` (remove extra resources from resource group) or `Validate` (only validates the template). 
