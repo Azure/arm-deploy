@@ -3957,11 +3957,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.DeployManagementGroupScope = void 0;
-const exec_1 = __nccwpck_require__(1514);
-const utils_1 = __nccwpck_require__(239);
+exports.deployManagementGroupScope = void 0;
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
-function DeployManagementGroupScope(azPath, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, additionalArguments) {
+const utils_1 = __nccwpck_require__(239);
+function deployManagementGroupScope(azCli, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if region is set
         if (!region) {
@@ -3972,78 +3973,28 @@ function DeployManagementGroupScope(azPath, region, template, deploymentMode, de
             core.warning("This deployment mode is not supported for management group scoped deployments, this parameter will be ignored!");
         }
         // create the parameter list
-        const validateParameters = [
-            region ? `--location "${region}"` : undefined,
-            template ?
-                template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
-                : undefined,
-            managementGroupId ? `--management-group-id "${managementGroupId}"` : undefined,
-            deploymentName ? `--name "${deploymentName}"` : undefined,
-            parameters ? `--parameters ${parameters}` : undefined
-        ].filter(Boolean).join(' ');
+        const validateParameters = (0, utils_1.joinCliArguments)(region ? `--location "${region}"` : undefined, template
+            ? template.startsWith("http")
+                ? `--template-uri ${template}`
+                : `--template-file ${template}`
+            : undefined, managementGroupId
+            ? `--management-group-id "${managementGroupId}"`
+            : undefined, deploymentName ? `--name "${deploymentName}"` : undefined, parameters ? `--parameters ${parameters}` : undefined);
         let azDeployParameters = validateParameters;
         if (additionalArguments) {
             azDeployParameters += ` ${additionalArguments}`;
         }
-        // configure exec to write the json output to a buffer
-        let commandOutput = '';
-        let commandStdErr = false;
-        const deployOptions = {
-            silent: true,
-            ignoreReturnCode: true,
-            failOnStdErr: false,
-            listeners: {
-                stderr: (data) => {
-                    let error = data.toString();
-                    if (error && error.trim().length !== 0) {
-                        commandStdErr = true;
-                        core.error(error);
-                    }
-                },
-                stdout: (data) => {
-                    commandOutput += data.toString();
-                },
-                debug: (data) => {
-                    core.debug(data);
-                }
-            }
-        };
-        const validateOptions = {
-            silent: true,
-            ignoreReturnCode: true,
-            listeners: {
-                stderr: (data) => {
-                    core.warning(data.toString());
-                },
-            }
-        };
         // validate the deployment
         core.info("Validating template...");
-        var code = yield (0, exec_1.exec)(`"${azPath}" deployment mg validate ${validateParameters} -o json`, [], validateOptions);
-        if (deploymentMode === "validate" && code != 0) {
-            throw new Error("Template validation failed.");
-        }
-        else if (code != 0) {
-            core.warning("Template validation failed.");
-        }
+        yield azCli.validate(`deployment mg validate ${validateParameters} -o json`, deploymentMode === "validate");
         if (deploymentMode != "validate") {
             // execute the deployment
             core.info("Creating deployment...");
-            var deploymentCode = yield (0, exec_1.exec)(`"${azPath}" deployment mg create ${azDeployParameters} -o json`, [], deployOptions);
-            if (deploymentCode != 0) {
-                throw new Error("Deployment failed.");
-            }
-            if (commandStdErr && failOnStdErr) {
-                throw new Error("Deployment process failed as some lines were written to stderr");
-            }
-            core.debug(commandOutput);
-            core.info("Parsing outputs...");
-            return (0, utils_1.ParseOutputs)(commandOutput);
+            return yield azCli.deploy(`deployment mg create ${azDeployParameters} -o json`, failOnStdErr);
         }
-        return {};
     });
 }
-exports.DeployManagementGroupScope = DeployManagementGroupScope;
+exports.deployManagementGroupScope = deployManagementGroupScope;
 
 
 /***/ }),
@@ -4086,94 +4037,45 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.DeployResourceGroupScope = void 0;
+exports.deployResourceGroupScope = void 0;
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
-const exec_1 = __nccwpck_require__(1514);
 const utils_1 = __nccwpck_require__(239);
-function DeployResourceGroupScope(azPath, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
+function deployResourceGroupScope(azCli, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if resourceGroupName is set
         if (!resourceGroupName) {
             throw Error("ResourceGroup name must be set.");
         }
         // Check if the resourceGroup exists
-        var result = yield (0, exec_1.exec)(`"${azPath}" group show --resource-group ${resourceGroupName}`, [], { silent: true, ignoreReturnCode: true });
-        if (result != 0) {
+        const rgExists = yield azCli.resourceGroupExists(resourceGroupName);
+        if (!rgExists) {
             throw Error(`Resource Group ${resourceGroupName} could not be found.`);
         }
         // create the parameter list
-        const validateParameters = [
-            resourceGroupName ? `--resource-group ${resourceGroupName}` : undefined,
-            template ?
-                template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
-                : undefined,
-            deploymentMode && deploymentMode != "validate" ? `--mode ${deploymentMode}` : "--mode Incremental",
-            deploymentName ? `--name "${deploymentName}"` : undefined,
-            parameters ? `--parameters ${parameters}` : undefined
-        ].filter(Boolean).join(' ');
+        const validateParameters = (0, utils_1.joinCliArguments)(resourceGroupName ? `--resource-group ${resourceGroupName}` : undefined, template
+            ? template.startsWith("http")
+                ? `--template-uri ${template}`
+                : `--template-file ${template}`
+            : undefined, deploymentMode && deploymentMode != "validate"
+            ? `--mode ${deploymentMode}`
+            : "--mode Incremental", deploymentName ? `--name "${deploymentName}"` : undefined, parameters ? `--parameters ${parameters}` : undefined);
         let azDeployParameters = validateParameters;
         if (additionalArguments) {
             azDeployParameters += ` ${additionalArguments}`;
         }
-        // configure exec to write the json output to a buffer
-        let commandOutput = '';
-        let commandStdErr = false;
-        const deployOptions = {
-            silent: true,
-            ignoreReturnCode: true,
-            failOnStdErr: false,
-            listeners: {
-                stderr: (data) => {
-                    let error = data.toString();
-                    if (error && error.trim().length !== 0) {
-                        commandStdErr = true;
-                        core.error(error);
-                    }
-                },
-                stdout: (data) => {
-                    commandOutput += data.toString();
-                },
-                debug: (data) => {
-                    core.debug(data);
-                }
-            }
-        };
-        const validateOptions = {
-            silent: true,
-            ignoreReturnCode: true,
-            listeners: {
-                stderr: (data) => {
-                    core.warning(data.toString());
-                },
-            }
-        };
         // validate the deployment
         core.info("Validating template...");
-        var code = yield (0, exec_1.exec)(`"${azPath}" deployment group validate ${validateParameters} -o json`, [], validateOptions);
-        if (deploymentMode === "validate" && code != 0) {
-            throw new Error("Template validation failed.");
-        }
-        else if (code != 0) {
-            core.warning("Template validation failed.");
-        }
+        yield azCli.validate(`deployment group validate ${validateParameters} -o json`, deploymentMode === "validate");
         if (deploymentMode != "validate") {
             // execute the deployment
             core.info("Creating deployment...");
-            var deploymentCode = yield (0, exec_1.exec)(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
-            if (deploymentCode != 0) {
-                throw new Error("Deployment failed.");
-            }
-            if (commandStdErr && failOnStdErr) {
-                throw new Error("Deployment process failed as some lines were written to stderr");
-            }
-            core.debug(commandOutput);
-            core.info("Parsing outputs...");
-            return (0, utils_1.ParseOutputs)(commandOutput);
+            return yield azCli.deploy(`deployment group create ${azDeployParameters} -o json`, failOnStdErr);
         }
-        return {};
     });
 }
-exports.DeployResourceGroupScope = DeployResourceGroupScope;
+exports.deployResourceGroupScope = deployResourceGroupScope;
 
 
 /***/ }),
@@ -4216,11 +4118,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.DeploySubscriptionScope = void 0;
-const exec_1 = __nccwpck_require__(1514);
-const utils_1 = __nccwpck_require__(239);
+exports.deploySubscriptionScope = void 0;
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
-function DeploySubscriptionScope(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
+const utils_1 = __nccwpck_require__(239);
+function deploySubscriptionScope(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if region is set
         if (!region) {
@@ -4231,77 +4134,26 @@ function DeploySubscriptionScope(azPath, region, template, deploymentMode, deplo
             core.warning("This deployment mode is not supported for subscription scoped deployments, this parameter will be ignored!");
         }
         // create the parameter list
-        const validateParameters = [
-            region ? `--location "${region}"` : undefined,
-            template ?
-                template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
-                : undefined,
-            deploymentName ? `--name "${deploymentName}"` : undefined,
-            parameters ? `--parameters ${parameters}` : undefined
-        ].filter(Boolean).join(' ');
+        const validateParameters = (0, utils_1.joinCliArguments)(region ? `--location "${region}"` : undefined, template
+            ? template.startsWith("http")
+                ? `--template-uri ${template}`
+                : `--template-file ${template}`
+            : undefined, deploymentName ? `--name "${deploymentName}"` : undefined, parameters ? `--parameters ${parameters}` : undefined);
         let azDeployParameters = validateParameters;
         if (additionalArguments) {
             azDeployParameters += ` ${additionalArguments}`;
         }
-        // configure exec to write the json output to a buffer
-        let commandOutput = '';
-        let commandStdErr = false;
-        const deployOptions = {
-            silent: true,
-            ignoreReturnCode: true,
-            failOnStdErr: false,
-            listeners: {
-                stderr: (data) => {
-                    let error = data.toString();
-                    if (error && error.trim().length !== 0) {
-                        commandStdErr = true;
-                        core.error(error);
-                    }
-                },
-                stdout: (data) => {
-                    commandOutput += data.toString();
-                },
-                debug: (data) => {
-                    core.debug(data);
-                }
-            }
-        };
-        const validateOptions = {
-            silent: true,
-            ignoreReturnCode: true,
-            listeners: {
-                stderr: (data) => {
-                    core.warning(data.toString());
-                },
-            }
-        };
         // validate the deployment
         core.info("Validating template...");
-        var code = yield (0, exec_1.exec)(`"${azPath}" deployment sub validate ${validateParameters} -o json`, [], validateOptions);
-        if (deploymentMode === "validate" && code != 0) {
-            throw new Error("Template validation failed.");
-        }
-        else if (code != 0) {
-            core.warning("Template validation failed.");
-        }
+        yield azCli.validate(`deployment sub validate ${validateParameters} -o json`, deploymentMode === "validate");
         if (deploymentMode != "validate") {
             // execute the deployment
             core.info("Creating deployment...");
-            var deploymentCode = yield (0, exec_1.exec)(`"${azPath}" deployment sub create ${azDeployParameters} -o json`, [], deployOptions);
-            if (deploymentCode != 0) {
-                throw new Error("Deployment failed.");
-            }
-            if (commandStdErr && failOnStdErr) {
-                throw new Error("Deployment process failed as some lines were written to stderr");
-            }
-            core.debug(commandOutput);
-            core.info("Parsing outputs...");
-            return (0, utils_1.ParseOutputs)(commandOutput);
+            return yield azCli.deploy(`deployment sub create ${azDeployParameters} -o json`, failOnStdErr);
         }
-        return {};
     });
 }
-exports.DeploySubscriptionScope = DeploySubscriptionScope;
+exports.deploySubscriptionScope = deploySubscriptionScope;
 
 
 /***/ }),
@@ -4344,11 +4196,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.DeployTenantScope = void 0;
-const exec_1 = __nccwpck_require__(1514);
-const utils_1 = __nccwpck_require__(239);
+exports.deployTenantScope = void 0;
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
-function DeployTenantScope(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
+const utils_1 = __nccwpck_require__(239);
+function deployTenantScope(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if region is set
         if (!region) {
@@ -4359,77 +4212,26 @@ function DeployTenantScope(azPath, region, template, deploymentMode, deploymentN
             core.warning("This deployment mode is not supported for tenant scoped deployments, this parameter will be ignored!");
         }
         // create the parameter list
-        const validateParameters = [
-            region ? `--location "${region}"` : undefined,
-            template ?
-                template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
-                : undefined,
-            deploymentName ? `--name "${deploymentName}"` : undefined,
-            parameters ? `--parameters ${parameters}` : undefined
-        ].filter(Boolean).join(' ');
+        const validateParameters = (0, utils_1.joinCliArguments)(region ? `--location "${region}"` : undefined, template
+            ? template.startsWith("http")
+                ? `--template-uri ${template}`
+                : `--template-file ${template}`
+            : undefined, deploymentName ? `--name "${deploymentName}"` : undefined, parameters ? `--parameters ${parameters}` : undefined);
         let azDeployParameters = validateParameters;
         if (additionalArguments) {
             azDeployParameters += ` ${additionalArguments}`;
         }
-        // configure exec to write the json output to a buffer
-        let commandOutput = '';
-        let commandStdErr = false;
-        const deployOptions = {
-            silent: true,
-            ignoreReturnCode: true,
-            failOnStdErr: false,
-            listeners: {
-                stderr: (data) => {
-                    let error = data.toString();
-                    if (error && error.trim().length !== 0) {
-                        commandStdErr = true;
-                        core.error(error);
-                    }
-                },
-                stdout: (data) => {
-                    commandOutput += data.toString();
-                },
-                debug: (data) => {
-                    core.debug(data);
-                }
-            }
-        };
-        const validateOptions = {
-            silent: true,
-            ignoreReturnCode: true,
-            listeners: {
-                stderr: (data) => {
-                    core.warning(data.toString());
-                },
-            }
-        };
         // validate the deployment
         core.info("Validating template...");
-        var code = yield (0, exec_1.exec)(`"${azPath}" deployment tenant validate ${validateParameters} -o json`, [], validateOptions);
-        if (deploymentMode === "validate" && code != 0) {
-            throw new Error("Template validation failed.");
-        }
-        else if (code != 0) {
-            core.warning("Template validation failed.");
-        }
+        yield azCli.validate(`deployment tenant validate ${validateParameters} -o json`, deploymentMode === "validate");
         if (deploymentMode != "validate") {
             // execute the deployment
             core.info("Creating deployment...");
-            var deploymentCode = yield (0, exec_1.exec)(`"${azPath}" deployment tenant create ${azDeployParameters} -o json`, [], deployOptions);
-            if (deploymentCode != 0) {
-                throw new Error("Deployment failed.");
-            }
-            if (commandStdErr && failOnStdErr) {
-                throw new Error("Deployment process failed as some lines were written to stderr");
-            }
-            core.debug(commandOutput);
-            core.info("Parsing outputs...");
-            return (0, utils_1.ParseOutputs)(commandOutput);
+            return yield azCli.deploy(`deployment tenant create ${azDeployParameters} -o json`, failOnStdErr);
         }
-        return {};
     });
 }
-exports.DeployTenantScope = DeployTenantScope;
+exports.deployTenantScope = deployTenantScope;
 
 
 /***/ }),
@@ -4449,61 +4251,93 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.main = void 0;
+exports.main = exports.deploy = void 0;
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 const core_1 = __nccwpck_require__(2186);
-const io_1 = __nccwpck_require__(7436);
 const scope_resourcegroup_1 = __nccwpck_require__(6887);
-const exec_1 = __nccwpck_require__(1514);
 const scope_tenant_1 = __nccwpck_require__(1368);
 const scope_managementgroup_1 = __nccwpck_require__(669);
 const scope_subscription_1 = __nccwpck_require__(8201);
-// Action Main code
-function main() {
+const azhelper_1 = __nccwpck_require__(7664);
+function populateOptions() {
     return __awaiter(this, void 0, void 0, function* () {
-        // determine az path
-        const azPath = yield (0, io_1.which)("az", true);
-        // retrieve action variables
-        const scope = (0, core_1.getInput)('scope') || "resourcegroup";
-        const subscriptionId = (0, core_1.getInput)('subscriptionId');
-        const region = (0, core_1.getInput)('region');
-        const resourceGroupName = (0, core_1.getInput)('resourceGroupName');
-        const template = (0, core_1.getInput)('template');
-        const deploymentMode = (0, core_1.getInput)('deploymentMode').toLowerCase();
-        const deploymentName = (0, core_1.getInput)('deploymentName');
-        const parameters = (0, core_1.getInput)('parameters');
-        const managementGroupId = (0, core_1.getInput)('managementGroupId');
-        const additionalArguments = (0, core_1.getInput)('additionalArguments');
+        const scope = (0, core_1.getInput)("scope") || "resourcegroup";
+        const subscriptionId = (0, core_1.getInput)("subscriptionId");
+        const region = (0, core_1.getInput)("region");
+        const resourceGroupName = (0, core_1.getInput)("resourceGroupName");
+        const template = (0, core_1.getInput)("template");
+        const deploymentMode = (0, core_1.getInput)("deploymentMode").toLowerCase();
+        const deploymentName = (0, core_1.getInput)("deploymentName");
+        const parameters = (0, core_1.getInput)("parameters");
+        const managementGroupId = (0, core_1.getInput)("managementGroupId");
+        const additionalArguments = (0, core_1.getInput)("additionalArguments");
         let failOnStdErr;
         try {
-            failOnStdErr = (0, core_1.getBooleanInput)('failOnStdErr');
+            failOnStdErr = (0, core_1.getBooleanInput)("failOnStdErr");
         }
         catch (err) {
             failOnStdErr = true;
         }
+        return {
+            scope,
+            subscriptionId,
+            region: region,
+            resourceGroupName,
+            template,
+            deploymentMode,
+            deploymentName,
+            parameters,
+            managementGroupId,
+            additionalArguments,
+            failOnStdErr,
+        };
+    });
+}
+function deploy(options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // determine az path
+        const azCli = yield (0, azhelper_1.getAzCliHelper)();
+        // retrieve action variables
+        const { scope, subscriptionId, region: region, resourceGroupName, template, deploymentMode, deploymentName, parameters, managementGroupId, additionalArguments, failOnStdErr, } = options;
         // change the subscription context
-        if (scope !== "tenant" && scope !== "managementgroup" && subscriptionId !== "") {
+        if (scope !== "tenant" &&
+            scope !== "managementgroup" &&
+            subscriptionId !== "") {
             (0, core_1.info)("Changing subscription context...");
-            yield (0, exec_1.exec)(`"${azPath}" account set --subscription ${subscriptionId}`, [], { silent: true });
+            yield azCli.setSubscriptionContext(subscriptionId);
         }
         // Run the Deployment
-        let result = {};
         switch (scope) {
             case "resourcegroup":
-                result = yield (0, scope_resourcegroup_1.DeployResourceGroupScope)(azPath, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments);
-                break;
+                return yield (0, scope_resourcegroup_1.deployResourceGroupScope)(azCli, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments);
             case "tenant":
-                result = yield (0, scope_tenant_1.DeployTenantScope)(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments);
-                break;
+                return yield (0, scope_tenant_1.deployTenantScope)(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments);
             case "managementgroup":
-                result = yield (0, scope_managementgroup_1.DeployManagementGroupScope)(azPath, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, additionalArguments);
-                break;
+                return yield (0, scope_managementgroup_1.deployManagementGroupScope)(azCli, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, additionalArguments);
             case "subscription":
-                result = yield (0, scope_subscription_1.DeploySubscriptionScope)(azPath, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments);
-                break;
+                return yield (0, scope_subscription_1.deploySubscriptionScope)(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments);
             default:
                 throw new Error("Invalid scope. Valid values are: 'resourcegroup', 'tenant', 'managementgroup', 'subscription'");
         }
-        return result;
+    });
+}
+exports.deploy = deploy;
+// Action Main code
+function main() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const options = yield populateOptions();
+            const result = yield deploy(options);
+            if (result) {
+                for (const outputName in result.outputs) {
+                    (0, core_1.setOutput)(outputName, result.outputs[outputName]);
+                }
+            }
+        }
+        catch (err) {
+            (0, core_1.setFailed)(`${err}`);
+        }
     });
 }
 exports.main = main;
@@ -4511,7 +4345,7 @@ exports.main = main;
 
 /***/ }),
 
-/***/ 239:
+/***/ 7664:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -4539,27 +4373,146 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ParseOutputs = void 0;
+exports.getAzCliHelper = exports.AzCliHelper = void 0;
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+const exec_1 = __nccwpck_require__(1514);
 const core = __importStar(__nccwpck_require__(2186));
-function ParseOutputs(commandOutput) {
+const utils_1 = __nccwpck_require__(239);
+const io_1 = __nccwpck_require__(7436);
+class AzCliHelper {
+    constructor(azPath) {
+        this.azPath = azPath;
+        this.setSubscriptionContext = setSubscriptionContext.bind(null, this.azPath);
+        this.resourceGroupExists = resourceGroupExists.bind(null, this.azPath);
+        this.deploy = deploy.bind(null, this.azPath);
+        this.validate = validate.bind(null, this.azPath);
+    }
+}
+exports.AzCliHelper = AzCliHelper;
+function getAzCliHelper() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const azPath = yield (0, io_1.which)("az", true);
+        return new AzCliHelper(azPath);
+    });
+}
+exports.getAzCliHelper = getAzCliHelper;
+function setSubscriptionContext(azPath, subscriptionId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield callAzCli(azPath, `account set --subscription ${subscriptionId}`, { silent: true });
+    });
+}
+function resourceGroupExists(azPath, resourceGroupName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const exitCode = yield callAzCli(azPath, `group show --resource-group ${resourceGroupName}`, { silent: true, ignoreReturnCode: true });
+        return exitCode === 0;
+    });
+}
+function deploy(azPath, command, failOnStdErr) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let hasStdErr = false;
+        let stdOut = "";
+        const options = {
+            silent: true,
+            ignoreReturnCode: true,
+            failOnStdErr: false,
+            listeners: {
+                stderr: (data) => {
+                    const error = data.toString();
+                    if (error && error.trim().length !== 0) {
+                        hasStdErr = true;
+                        core.error(error);
+                    }
+                },
+                stdout: (data) => {
+                    stdOut += data.toString();
+                },
+                debug: (data) => {
+                    core.debug(data);
+                },
+            },
+        };
+        const exitCode = yield callAzCli(azPath, command, options);
+        if (exitCode != 0) {
+            throw new Error("Deployment failed.");
+        }
+        if (hasStdErr && failOnStdErr) {
+            throw new Error("Deployment process failed as some lines were written to stderr");
+        }
+        core.debug(stdOut);
+        core.info("Parsing outputs...");
+        return (0, utils_1.getDeploymentResult)(stdOut);
+    });
+}
+function validate(azPath, command, failOnNonZeroExit) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const options = {
+            silent: true,
+            ignoreReturnCode: true,
+            listeners: {
+                stderr: (data) => {
+                    core.warning(data.toString());
+                },
+            },
+        };
+        const exitCode = yield callAzCli(azPath, command, options);
+        if (failOnNonZeroExit && exitCode != 0) {
+            throw new Error("Template validation failed.");
+        }
+        else if (exitCode != 0) {
+            core.warning("Template validation failed.");
+        }
+    });
+}
+function callAzCli(azPath, command, options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield (0, exec_1.exec)(`"${azPath}" ${command}`, [], options);
+    });
+}
+
+
+/***/ }),
+
+/***/ 239:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.joinCliArguments = exports.getDeploymentResult = void 0;
+function getDeploymentResult(commandOutput) {
     // parse the result and save the outputs
-    var object = {};
+    const outputs = {};
     try {
-        var result = JSON.parse(commandOutput);
-        object = result.properties.outputs;
-        for (const key in object) {
-            if (object.hasOwnProperty(key)) {
-                core.setOutput(key, object[key].value);
-            }
+        const parsed = JSON.parse(commandOutput);
+        for (const key in parsed.properties.outputs) {
+            outputs[key] = parsed.properties.outputs[key].value;
         }
     }
     catch (err) {
-        console.log(commandOutput);
+        console.error(commandOutput);
     }
-    return object;
+    return {
+        outputs,
+    };
 }
-exports.ParseOutputs = ParseOutputs;
+exports.getDeploymentResult = getDeploymentResult;
+function joinCliArguments(...args) {
+    return args.filter(Boolean).join(" ");
+}
+exports.joinCliArguments = joinCliArguments;
 
 
 /***/ }),
@@ -4721,16 +4674,10 @@ var __webpack_exports__ = {};
 var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __nccwpck_require__(2186);
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 const main_1 = __nccwpck_require__(399);
-(0, main_1.main)()
-    .then(() => {
-    process.exit(0);
-})
-    .catch((err) => {
-    (0, core_1.setFailed)(err.message);
-    process.exit(1);
-});
+(0, main_1.main)();
 
 })();
 

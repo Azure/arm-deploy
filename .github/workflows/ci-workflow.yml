@@ -26,96 +26,46 @@ jobs:
 
       - run: npm ci
 
-      - name: Resource group scope test
+      - name: Run Tests
         env:
-          INPUT_SCOPE: resourcegroup
-          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
-          INPUT_RESOURCEGROUPNAME: E2eTestResourceGroupForArmAction
-          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.json
-          INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json
-          INPUT_DEPLOYMENTNAME: github-test-rg
-          INPUT_DEPLOYMENTMODE: Complete
-          EXPECTED_TO: pass
-        run: npm test
-      
-      - name: Resource group scope test - Negative
-        env:
-          INPUT_SCOPE: resourcegroup
-          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
-          INPUT_RESOURCEGROUPNAME: E2eTestResourceGroupForArmAction
-          INPUT_TEMPLATE: ./test/resourceGroup-Negative/template.json
-          INPUT_PARAMETERS: ./test/resourceGroup-Negative/parameters.json
-          INPUT_REGION: eastasia
-          INPUT_DEPLOYMENTNAME: github-test-rg
-          INPUT_DEPLOYMENTMODE: Complete
-          EXPECTED_TO: fail
-        run: npm test
-      
-      # - name: Management group scope test
-      #   env:
-      #     INPUT_SCOPE: managementgroup
-      #     INPUT_MANAGEMENTGROUPID: E2eTestGroupForArmAction
-      #     INPUT_REGION: WestUS
-      #     INPUT_TEMPLATE: ./test/template.json
-      #     INPUT_PARAMETERS: ./test/parameters.json
-      #     INPUT_DEPLOYMENTNAME: github-test-mg
-      #     EXPECTED_TO: pass
-      #   run: npm test
-
-      - name: Subscription scope test
-        env:
-          INPUT_SCOPE: subscription
-          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
-          INPUT_REGION: centralus
-          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/emptyrg.json
-          INPUT_PARAMETERS: rgName=demoResourceGroup rgLocation=centralus
-          INPUT_DEPLOYMENTNAME: github-test-subs
-          EXPECTED_TO: pass
-        run: npm test
-      
-      - name: Subscription scope test - Negative
-        env:
-          INPUT_SCOPE: subscription
-          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
-          INPUT_REGION: centralus
-          INPUT_TEMPLATE: ./test/subscription-Negative/template.json
-          INPUT_PARAMETERS: rgName=demoResourceGroup rgLocation=centralus
-          INPUT_DEPLOYMENTNAME: github-test-subs
-          EXPECTED_TO: fail
+          SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
         run: npm test
 
-      # - name: Tenant scope test
-      #   env:
-      #     INPUT_SCOPE: tenant
-      #     INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
-      #     INPUT_REGION: centralus
-      #     INPUT_TEMPLATE: ./test/tenant/template.json
-      #     INPUT_PARAMETERS: ./test/tenant/parameters.json
-      #     INPUT_DEPLOYMENTNAME: github-test-ten
-      #     EXPECTED_TO: pass
-      #   run: ts-node test/main.tests.ts
-      
-      # - name: Tenant scope test - Negative
-      #   env:
-      #     INPUT_SCOPE: tenant
-      #     INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
-      #     INPUT_REGION: centralus
-      #     INPUT_TEMPLATE: ./test/tenant/negative/template.json
-      #     INPUT_PARAMETERS: ./test/tenant/negative/parameters.json
-      #     INPUT_DEPLOYMENTNAME: github-test-ten
-      #     EXPECTED_TO: fail
-      #   run: ts-node test/main.tests.ts
+  run-tests-edge:
+    name: Run Tests (Edge)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v1
 
-      - name: Validate mode test
+      - name: Installing Az CLI Edge build 
+        run: |
+           cd ../..
+           CWD="$(pwd)"
+           python3 -m venv oidc-venv
+           . oidc-venv/bin/activate
+           echo "***********activated virual environment**********" 
+           python3 -m pip install --upgrade pip
+           echo "***************started installing cli edge build******************"
+           pip3 install -q --upgrade --pre azure-cli --extra-index-url https://azurecliprod.blob.core.windows.net/edge --no-cache-dir --upgrade-strategy=eager
+           echo "***************installed cli Edge build*******************"    
+           echo "$CWD/oidc-venv/bin" >> $GITHUB_PATH
+           az --version
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "20.x"
+
+      - run: npm ci
+
+      - name: Run Tests
         env:
-          INPUT_SCOPE: resourcegroup
-          INPUT_SUBSCRIPTIONID: ${{ secrets.SUBSCRIPTION_ID }}
-          INPUT_RESOURCEGROUPNAME: E2eTestResourceGroupForArmAction
-          INPUT_TEMPLATE: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.json
-          INPUT_PARAMETERS: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json
-          INPUT_DEPLOYMENTNAME: github-test-rg
-          INPUT_DEPLOYMENTMODE: Validate
-          EXPECTED_TO: pass
+          SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
         run: npm test
 
   execute-action:
