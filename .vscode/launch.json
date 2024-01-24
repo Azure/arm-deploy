@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/entrypoint.ts",
+            "program": "${workspaceFolder}/src/run.ts",
             "outFiles": [
                 "${workspaceFolder}/_build/*.js"
             ],

@@ -1,95 +1,61 @@
-import * as core from '@actions/core';
-import { exec } from '@actions/exec';
-import { ExecOptions } from '@actions/exec/lib/interfaces';
-import { ParseOutputs, Outputs } from '../utils/utils';
-import { BufferSource } from 'stream/web';
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+import * as core from "@actions/core";
+import { DeploymentResult, joinCliArguments } from "../utils/utils";
+import { AzCliHelper } from "../utils/azhelper";
 
-export async function DeployResourceGroupScope(azPath: string, resourceGroupName: string, template: string, deploymentMode: string, deploymentName: string, parameters: string, failOnStdErr: Boolean, additionalArguments: String): Promise<Outputs> {
-    // Check if resourceGroupName is set
-    if (!resourceGroupName) {
-        throw Error("ResourceGroup name must be set.")
-    }
+export async function deployResourceGroupScope(
+  azCli: AzCliHelper,
+  resourceGroupName: string,
+  template: string,
+  deploymentMode: string,
+  deploymentName: string,
+  parameters: string,
+  failOnStdErr: boolean,
+  additionalArguments: string,
+): Promise<DeploymentResult | undefined> {
+  // Check if resourceGroupName is set
+  if (!resourceGroupName) {
+    throw Error("ResourceGroup name must be set.");
+  }
 
-    // Check if the resourceGroup exists
-    var result = await exec(`"${azPath}" group show --resource-group ${resourceGroupName}`, [], { silent: true, ignoreReturnCode: true });
-    if (result != 0) {
-        throw Error(`Resource Group ${resourceGroupName} could not be found.`)
-    }
+  // Check if the resourceGroup exists
+  const rgExists = await azCli.resourceGroupExists(resourceGroupName);
+  if (!rgExists) {
+    throw Error(`Resource Group ${resourceGroupName} could not be found.`);
+  }
 
-    // create the parameter list
-    const validateParameters = [
-        resourceGroupName ? `--resource-group ${resourceGroupName}` : undefined,
-        template ?
-            template.startsWith("http") ? `--template-uri ${template}` : `--template-file ${template}`
-            : undefined,
-        deploymentMode && deploymentMode != "validate" ? `--mode ${deploymentMode}` : "--mode Incremental",
-        deploymentName ? `--name "${deploymentName}"` : undefined,
-        parameters ? `--parameters ${parameters}` : undefined
-    ].filter(Boolean).join(' ');
+  // create the parameter list
+  const validateParameters = joinCliArguments(
+    resourceGroupName ? `--resource-group ${resourceGroupName}` : undefined,
+    template
+      ? template.startsWith("http")
+        ? `--template-uri ${template}`
+        : `--template-file ${template}`
+      : undefined,
+    deploymentMode && deploymentMode != "validate"
+      ? `--mode ${deploymentMode}`
+      : "--mode Incremental",
+    deploymentName ? `--name "${deploymentName}"` : undefined,
+    parameters ? `--parameters ${parameters}` : undefined,
+  );
 
-    let azDeployParameters = validateParameters;
-    if(additionalArguments){
-        azDeployParameters += ` ${additionalArguments}`;
-    }
+  let azDeployParameters = validateParameters;
+  if (additionalArguments) {
+    azDeployParameters += ` ${additionalArguments}`;
+  }
 
-    // configure exec to write the json output to a buffer
-    let commandOutput = '';
-    let commandStdErr = false;
-    const deployOptions: ExecOptions = {
-        silent: true,
-        ignoreReturnCode: true,
-        failOnStdErr: false,
-        listeners: {
-            stderr: (data: BufferSource) => {
-                let error = data.toString();
-                if(error && error.trim().length !== 0)
-                {
-                    commandStdErr = true;
-                    core.error(error);
-                }
-            },
-            stdout: (data: BufferSource) => {
-                commandOutput += data.toString();
-            },
-            debug: (data: string) => {
-                core.debug(data);
-            }
-        }
-    }
-    const validateOptions: ExecOptions = {
-        silent: true,
-        ignoreReturnCode: true,
-        listeners: {
-            stderr: (data: BufferSource) => {
-                core.warning(data.toString());
-            },
-        }
-    }
+  // validate the deployment
+  core.info("Validating template...");
+  await azCli.validate(
+    `deployment group validate ${validateParameters} -o json`,
+    deploymentMode === "validate");
 
-    // validate the deployment
-    core.info("Validating template...")
-    var code = await exec(`"${azPath}" deployment group validate ${validateParameters} -o json`, [], validateOptions);
-    if (deploymentMode === "validate" && code != 0) {
-        throw new Error("Template validation failed.")
-    } else if (code != 0) {
-        core.warning("Template validation failed.")
-    }
-
-    if (deploymentMode != "validate") {
-        // execute the deployment
-        core.info("Creating deployment...")
-        var deploymentCode = await exec(`"${azPath}" deployment group create ${azDeployParameters} -o json`, [], deployOptions);
-        
-        if (deploymentCode != 0) {
-            throw new Error("Deployment failed.")
-        }
-        if(commandStdErr && failOnStdErr) {
-            throw new Error("Deployment process failed as some lines were written to stderr");
-        }
-        
-        core.debug(commandOutput);
-        core.info("Parsing outputs...")
-        return ParseOutputs(commandOutput)
-    }
-    return {}
+  if (deploymentMode != "validate") {
+    // execute the deployment
+    core.info("Creating deployment...");
+    return await azCli.deploy(
+      `deployment group create ${azDeployParameters} -o json`,
+      failOnStdErr);
+  }
 }
