@@ -20,7 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "@vercel/ncc": "^0.38.1",
-    "@zeit/ncc": "^0.21.1",
+    "@zeit/ncc": "^0.22.3",
     "ts-node": "^10.9.2",
     "tslint": "^6.1.0",
     "typescript": "^5.3.3"
