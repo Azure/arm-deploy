@@ -51,13 +51,15 @@ export async function deployManagementGroupScope(
   core.info("Validating template...");
   await azCli.validate(
     `deployment mg validate ${validateParameters} -o json`,
-    deploymentMode === "validate");
+    deploymentMode === "validate",
+  );
 
   if (deploymentMode != "validate") {
     // execute the deployment
     core.info("Creating deployment...");
     return await azCli.deploy(
       `deployment mg create ${azDeployParameters} -o json`,
-      failOnStdErr);
+      failOnStdErr,
+    );
   }
 }

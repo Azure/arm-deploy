@@ -49,13 +49,15 @@ export async function deployResourceGroupScope(
   core.info("Validating template...");
   await azCli.validate(
     `deployment group validate ${validateParameters} -o json`,
-    deploymentMode === "validate");
+    deploymentMode === "validate",
+  );
 
   if (deploymentMode != "validate") {
     // execute the deployment
     core.info("Creating deployment...");
     return await azCli.deploy(
       `deployment group create ${azDeployParameters} -o json`,
-      failOnStdErr);
+      failOnStdErr,
+    );
   }
 }

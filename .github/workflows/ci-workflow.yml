@@ -103,6 +103,5 @@ jobs:
           scope: resourcegroup
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
           resourceGroupName: arm-deploy-e2e
-          template: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.json
-          parameters: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json
+          parameters: test/bicep/inputs-outputs.bicepparam
           deploymentName: e2e-test-${{ matrix.os }}

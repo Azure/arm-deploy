@@ -46,13 +46,15 @@ export async function deployTenantScope(
   core.info("Validating template...");
   await azCli.validate(
     `deployment tenant validate ${validateParameters} -o json`,
-    deploymentMode === "validate");
+    deploymentMode === "validate",
+  );
 
   if (deploymentMode != "validate") {
     // execute the deployment
     core.info("Creating deployment...");
     return await azCli.deploy(
       `deployment tenant create ${azDeployParameters} -o json`,
-      failOnStdErr);
+      failOnStdErr,
+    );
   }
 }

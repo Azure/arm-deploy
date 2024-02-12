@@ -21,17 +21,17 @@ export async function getAzCliHelper() {
 }
 
 async function setSubscriptionContext(azPath: string, subscriptionId: string) {
-  await callAzCli(
-    azPath,
-    `account set --subscription ${subscriptionId}`,
-    { silent: true });
+  await callAzCli(azPath, `account set --subscription ${subscriptionId}`, {
+    silent: true,
+  });
 }
 
 async function resourceGroupExists(azPath: string, resourceGroupName: string) {
   const exitCode = await callAzCli(
     azPath,
     `group show --resource-group ${resourceGroupName}`,
-    { silent: true, ignoreReturnCode: true });
+    { silent: true, ignoreReturnCode: true },
+  );
 
   return exitCode === 0;
 }
@@ -77,7 +77,11 @@ async function deploy(azPath: string, command: string, failOnStdErr: boolean) {
   return getDeploymentResult(stdOut);
 }
 
-async function validate(azPath: string, command: string, failOnNonZeroExit: boolean) {
+async function validate(
+  azPath: string,
+  command: string,
+  failOnNonZeroExit: boolean,
+) {
   const options: ExecOptions = {
     silent: true,
     ignoreReturnCode: true,
@@ -97,6 +101,10 @@ async function validate(azPath: string, command: string, failOnNonZeroExit: bool
   }
 }
 
-async function callAzCli(azPath: string, command: string, options: ExecOptions) {
+async function callAzCli(
+  azPath: string,
+  command: string,
+  options: ExecOptions,
+) {
   return await exec(`"${azPath}" ${command}`, [], options);
 }
