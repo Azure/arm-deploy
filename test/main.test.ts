@@ -24,7 +24,7 @@ describe("live tests", () => {
       scope: 'resourcegroup',
       managementGroupId: '',
       subscriptionId: process.env.SUBSCRIPTION_ID ?? '',
-      resourceGroupName: 'E2eTestResourceGroupForArmAction',
+      resourceGroupName: 'arm-deploy-e2e',
       region: '',
       template: 'https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.json',
       parameters: 'https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json',
@@ -43,7 +43,7 @@ describe("live tests", () => {
       scope: 'resourcegroup',
       managementGroupId: '',
       subscriptionId: process.env.SUBSCRIPTION_ID ?? '',
-      resourceGroupName: 'E2eTestResourceGroupForArmAction',
+      resourceGroupName: 'arm-deploy-e2e',
       region: 'eastasia',
       template: path.resolve(__dirname, './resourceGroup-Negative/template.json'),
       parameters: path.resolve(__dirname, './resourceGroup-Negative/parameters.json'),
@@ -57,7 +57,8 @@ describe("live tests", () => {
     expect(coreMock.setFailed).toHaveBeenCalled();
   }, liveTestTimeout);
   
-  it("subscription scope - positive", async () => {
+  // subscription scope auth not currently supported in live tests
+  xit("subscription scope - positive", async () => {
     mockInputs({
       scope: 'subscription',
       managementGroupId: '',
@@ -76,7 +77,8 @@ describe("live tests", () => {
     expect(coreMock.setFailed).not.toHaveBeenCalled();
   }, liveTestTimeout);
 
-  it("subscription scope - negative", async () => {
+  // subscription scope auth not currently supported in live tests
+  xit("subscription scope - negative", async () => {
     mockInputs({
       scope: 'subscription',
       managementGroupId: '',
@@ -100,7 +102,7 @@ describe("live tests", () => {
       scope: 'resourcegroup',
       managementGroupId: '',
       subscriptionId: process.env.SUBSCRIPTION_ID ?? '',
-      resourceGroupName: 'E2eTestResourceGroupForArmAction',
+      resourceGroupName: 'arm-deploy-e2e',
       region: '',
       template: 'https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.json',
       parameters: 'https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json',
@@ -119,7 +121,7 @@ describe("live tests", () => {
       scope: 'resourcegroup',
       managementGroupId: '',
       subscriptionId: process.env.SUBSCRIPTION_ID ?? '',
-      resourceGroupName: 'E2eTestResourceGroupForArmAction',
+      resourceGroupName: 'arm-deploy-e2e',
       region: '',
       template: path.resolve(__dirname, './bicep/inputs-outputs.bicep'),
       parameters: path.resolve(__dirname, './bicep/inputs-outputs.parameters.json'),
@@ -145,7 +147,7 @@ describe("live tests", () => {
       scope: 'resourcegroup',
       managementGroupId: '',
       subscriptionId: process.env.SUBSCRIPTION_ID ?? '',
-      resourceGroupName: 'E2eTestResourceGroupForArmAction',
+      resourceGroupName: 'arm-deploy-e2e',
       region: '',
       template: path.resolve(__dirname, './bicep/inputs-outputs.bicep'),
       parameters: path.resolve(__dirname, './bicep/inputs-outputs.bicepparam'),
