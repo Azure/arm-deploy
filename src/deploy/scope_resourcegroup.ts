@@ -7,12 +7,12 @@ import { AzCliHelper } from "../utils/azhelper";
 export async function deployResourceGroupScope(
   azCli: AzCliHelper,
   resourceGroupName: string,
-  template: string,
-  deploymentMode: string,
+  template: string | undefined,
+  deploymentMode: string | undefined,
   deploymentName: string,
-  parameters: string,
+  parameters: string | undefined,
   failOnStdErr: boolean,
-  additionalArguments: string,
+  additionalArguments: string | undefined,
 ): Promise<DeploymentResult | undefined> {
   // Check if resourceGroupName is set
   if (!resourceGroupName) {
