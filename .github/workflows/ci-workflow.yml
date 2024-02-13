@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   run-tests:
@@ -17,7 +21,9 @@ jobs:
 
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -36,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Installing Az CLI Edge build 
         run: |
@@ -54,10 +60,12 @@ jobs:
 
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: "20.x"
 
@@ -85,14 +93,15 @@ jobs:
 
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Run Action
         uses: ./
         with:
           scope: resourcegroup
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-          resourceGroupName: E2eTestResourceGroupForArmAction
-          template: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.json
-          parameters: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.web/webapp-basic-linux/azuredeploy.parameters.json
+          resourceGroupName: arm-deploy-e2e
+          parameters: test/bicep/inputs-outputs.bicepparam
           deploymentName: e2e-test-${{ matrix.os }}

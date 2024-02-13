@@ -7,13 +7,13 @@ import { AzCliHelper } from "../utils/azhelper";
 export async function deployManagementGroupScope(
   azCli: AzCliHelper,
   region: string,
-  template: string,
-  deploymentMode: string,
+  template: string | undefined,
+  deploymentMode: string | undefined,
   deploymentName: string,
-  parameters: string,
+  parameters: string | undefined,
   managementGroupId: string,
   failOnStdErr: boolean,
-  additionalArguments: string,
+  additionalArguments: string | undefined,
 ): Promise<DeploymentResult | undefined> {
   // Check if region is set
   if (!region) {
@@ -51,13 +51,15 @@ export async function deployManagementGroupScope(
   core.info("Validating template...");
   await azCli.validate(
     `deployment mg validate ${validateParameters} -o json`,
-    deploymentMode === "validate");
+    deploymentMode === "validate",
+  );
 
   if (deploymentMode != "validate") {
     // execute the deployment
     core.info("Creating deployment...");
     return await azCli.deploy(
       `deployment mg create ${azDeployParameters} -o json`,
-      failOnStdErr);
+      failOnStdErr,
+    );
   }
 }

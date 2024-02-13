@@ -14,19 +14,9 @@ export const coreMock = {
 
 export function mockInputs(options: Options) {
   coreMock.getInput.mockImplementation(name => {
-    const option = options[name as keyof Options];
-    if (option === undefined) {
-      throw new Error(`Unexpected input: ${name}`);
-    }
-
-    return option;
+    return options[name as keyof Options] ?? '';
   });
   coreMock.getBooleanInput.mockImplementation(name => {
-    const option = options[name as keyof Options];
-    if (option === undefined) {
-      throw new Error(`Unexpected input: ${name}`);
-    }
-
-    return option;
+    return options[name as keyof Options] ?? false;
   });
 }

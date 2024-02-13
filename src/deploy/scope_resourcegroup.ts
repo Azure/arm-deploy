@@ -7,12 +7,12 @@ import { AzCliHelper } from "../utils/azhelper";
 export async function deployResourceGroupScope(
   azCli: AzCliHelper,
   resourceGroupName: string,
-  template: string,
-  deploymentMode: string,
+  template: string | undefined,
+  deploymentMode: string | undefined,
   deploymentName: string,
-  parameters: string,
+  parameters: string | undefined,
   failOnStdErr: boolean,
-  additionalArguments: string,
+  additionalArguments: string | undefined,
 ): Promise<DeploymentResult | undefined> {
   // Check if resourceGroupName is set
   if (!resourceGroupName) {
@@ -49,13 +49,15 @@ export async function deployResourceGroupScope(
   core.info("Validating template...");
   await azCli.validate(
     `deployment group validate ${validateParameters} -o json`,
-    deploymentMode === "validate");
+    deploymentMode === "validate",
+  );
 
   if (deploymentMode != "validate") {
     // execute the deployment
     core.info("Creating deployment...");
     return await azCli.deploy(
       `deployment group create ${azDeployParameters} -o json`,
-      failOnStdErr);
+      failOnStdErr,
+    );
   }
 }

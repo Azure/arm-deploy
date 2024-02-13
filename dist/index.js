@@ -4409,7 +4409,9 @@ function getAzCliHelper() {
 exports.getAzCliHelper = getAzCliHelper;
 function setSubscriptionContext(azPath, subscriptionId) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield callAzCli(azPath, `account set --subscription ${subscriptionId}`, { silent: true });
+        yield callAzCli(azPath, `account set --subscription ${subscriptionId}`, {
+            silent: true,
+        });
     });
 }
 function resourceGroupExists(azPath, resourceGroupName) {

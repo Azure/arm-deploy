@@ -20,11 +20,11 @@ export type Options = {
   subscriptionId: string;
   resourceGroupName: string;
   region: string;
-  template: string;
-  deploymentMode: string;
+  template?: string;
+  deploymentMode?: string;
   deploymentName: string;
-  parameters: string;
-  additionalArguments: string;
+  parameters?: string;
+  additionalArguments?: string;
   failOnStdErr: boolean;
 };
 
