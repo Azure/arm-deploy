@@ -15,9 +15,19 @@ jobs:
   run-tests:
     name: Run Tests
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
     steps:
       - name: Check out source code
         uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
 
       - uses: azure/login@v1
         with:
@@ -37,12 +47,25 @@ jobs:
           SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
         run: npm test
 
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
   run-tests-edge:
     name: Run Tests (Edge)
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
     steps:
       - name: Check out source code
         uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
 
       - name: Installing Az CLI Edge build 
         run: |
@@ -75,6 +98,9 @@ jobs:
         env:
           SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
         run: npm test
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
 
   execute-action:
     name: Execute Action
