@@ -41,7 +41,7 @@ configuration:
           - addLabel:
               label: "Status: No Recent Activity"
           - addReply:
-              reply: "Hi @${issueAuthor}, this issue has been marked as stale because it was labeled as requiring author feedback but has not had any activity for **7 days**. It will be closed if no further activity occurs **within 3 days of this comment**. Thanks for contributing to bicep! :smile: :mechanical_arm:"
+              reply: "Hi @${issueAuthor}, this issue has been marked as stale because it was labeled as requiring author feedback but has not had any activity for **7 days**. It will be closed if no further activity occurs **within 3 days of this comment**. Thanks for contributing! :smile: :mechanical_arm:"
 
     eventResponderTasks:
       - description: "Replace 'Needs: Author Feedback' with 'Needs: Triage' label when author comments"
