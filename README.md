@@ -32,7 +32,7 @@ Every template output will either be exported as output if output is a json obje
 ## Usage
 
 ```yml
-- uses: azure/arm-deploy@v1
+- uses: azure/arm-deploy@v2
   with:
     subscriptionId: <YourSubscriptionId>
     resourceGroupName: <YourResourceGroup>
@@ -50,10 +50,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - uses: azure/login@v1
+    - uses: azure/login@v2
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - uses: azure/arm-deploy@v1
+    - uses: azure/arm-deploy@v2
       with:
         resourceGroupName: github-action-arm-rg
         template: ./azuredeploy.json
@@ -88,16 +88,16 @@ jobs:
       ResourceGroupLocation: "australiaeast"
     steps:
     - uses: actions/checkout@master
-    - uses: azure/login@v1
+    - uses: azure/login@v2
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - uses: Azure/CLI@v1
+    - uses: Azure/CLI@v2
       with:
         inlineScript: |
           #!/bin/bash
           az group create --name ${{ env.ResourceGroupName }} --location ${{ env.ResourceGroupLocation }}
           echo "Azure resource group created"
-    - uses: azure/arm-deploy@v1
+    - uses: azure/arm-deploy@v2
       with:
         resourceGroupName: ${{ env.ResourceGroupName }}
         template: ./azuredeploy.json
@@ -109,7 +109,7 @@ In this example, our template outputs `containerName`.
 
 ## Steps
 ```yaml
-- uses: azure/arm-deploy@v1
+- uses: azure/arm-deploy@v2
   id: deploy
   with:
     resourceGroupName: azurearmaction
@@ -144,7 +144,7 @@ ARM Deploy Actions is supported for the Azure public cloud as well as Azure gove
 In this example, we are setting `failOnStdErr` to false. 
 
 ```yaml
-- uses: azure/arm-deploy@v1
+- uses: azure/arm-deploy@v2
   id: deploy
   with:
     resourceGroupName: azurearmaction
