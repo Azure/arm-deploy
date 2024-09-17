@@ -15,17 +15,18 @@ export function getDeploymentResult(commandOutput: string, maskedOutputs: string
       properties: {
         outputs: {
           [index: string]: {
-            value: unknown;
+            value: any;
           };
         };
       };
     };
 
     for (const key in parsed.properties.outputs) {
+      const maskedValue = parsed.properties.outputs[key].value;
       if (maskedOutputs && maskedOutputs.includes(key)) {
-        setSecret(parsed.properties.outputs[key].value.toString());
+        setSecret(maskedValue.toString());
       }
-      outputs[key] = parsed.properties.outputs[key].value;
+      outputs[key] = maskedValue;
     }
   } catch (err) {
     console.error(commandOutput);

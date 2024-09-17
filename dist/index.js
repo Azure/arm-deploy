@@ -3919,7 +3919,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 669:
+/***/ 1337:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -3961,7 +3961,7 @@ exports.deployManagementGroupScope = void 0;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
-const utils_1 = __nccwpck_require__(239);
+const utils_1 = __nccwpck_require__(5712);
 function deployManagementGroupScope(azCli, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if region is set
@@ -3995,11 +3995,11 @@ function deployManagementGroupScope(azCli, region, template, deploymentMode, dep
     });
 }
 exports.deployManagementGroupScope = deployManagementGroupScope;
-
+//# sourceMappingURL=scope_managementgroup.js.map
 
 /***/ }),
 
-/***/ 6887:
+/***/ 7539:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -4041,7 +4041,7 @@ exports.deployResourceGroupScope = void 0;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
-const utils_1 = __nccwpck_require__(239);
+const utils_1 = __nccwpck_require__(5712);
 function deployResourceGroupScope(azCli, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if resourceGroupName is set
@@ -4076,11 +4076,11 @@ function deployResourceGroupScope(azCli, resourceGroupName, template, deployment
     });
 }
 exports.deployResourceGroupScope = deployResourceGroupScope;
-
+//# sourceMappingURL=scope_resourcegroup.js.map
 
 /***/ }),
 
-/***/ 8201:
+/***/ 2979:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -4122,7 +4122,7 @@ exports.deploySubscriptionScope = void 0;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
-const utils_1 = __nccwpck_require__(239);
+const utils_1 = __nccwpck_require__(5712);
 function deploySubscriptionScope(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if region is set
@@ -4154,11 +4154,11 @@ function deploySubscriptionScope(azCli, region, template, deploymentMode, deploy
     });
 }
 exports.deploySubscriptionScope = deploySubscriptionScope;
-
+//# sourceMappingURL=scope_subscription.js.map
 
 /***/ }),
 
-/***/ 1368:
+/***/ 5296:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -4200,7 +4200,7 @@ exports.deployTenantScope = void 0;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
-const utils_1 = __nccwpck_require__(239);
+const utils_1 = __nccwpck_require__(5712);
 function deployTenantScope(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if region is set
@@ -4232,11 +4232,11 @@ function deployTenantScope(azCli, region, template, deploymentMode, deploymentNa
     });
 }
 exports.deployTenantScope = deployTenantScope;
-
+//# sourceMappingURL=scope_tenant.js.map
 
 /***/ }),
 
-/***/ 399:
+/***/ 1713:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -4255,11 +4255,11 @@ exports.main = exports.deploy = void 0;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core_1 = __nccwpck_require__(2186);
-const scope_resourcegroup_1 = __nccwpck_require__(6887);
-const scope_tenant_1 = __nccwpck_require__(1368);
-const scope_managementgroup_1 = __nccwpck_require__(669);
-const scope_subscription_1 = __nccwpck_require__(8201);
-const azhelper_1 = __nccwpck_require__(7664);
+const scope_resourcegroup_1 = __nccwpck_require__(7539);
+const scope_tenant_1 = __nccwpck_require__(5296);
+const scope_managementgroup_1 = __nccwpck_require__(1337);
+const scope_subscription_1 = __nccwpck_require__(2979);
+const azhelper_1 = __nccwpck_require__(3673);
 function populateOptions() {
     return __awaiter(this, void 0, void 0, function* () {
         const scope = (0, core_1.getInput)("scope") || "resourcegroup";
@@ -4341,11 +4341,11 @@ function main() {
     });
 }
 exports.main = main;
-
+//# sourceMappingURL=main.js.map
 
 /***/ }),
 
-/***/ 7664:
+/***/ 3673:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -4388,7 +4388,7 @@ exports.getAzCliHelper = exports.AzCliHelper = void 0;
 // Licensed under the MIT License.
 const exec_1 = __nccwpck_require__(1514);
 const core = __importStar(__nccwpck_require__(2186));
-const utils_1 = __nccwpck_require__(239);
+const utils_1 = __nccwpck_require__(5712);
 const io_1 = __nccwpck_require__(7436);
 class AzCliHelper {
     constructor(azPath) {
@@ -4481,11 +4481,11 @@ function callAzCli(azPath, command, options) {
         return yield (0, exec_1.exec)(`"${azPath}" ${command}`, [], options);
     });
 }
-
+//# sourceMappingURL=azhelper.js.map
 
 /***/ }),
 
-/***/ 239:
+/***/ 5712:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4515,7 +4515,7 @@ function joinCliArguments(...args) {
     return args.filter(Boolean).join(" ");
 }
 exports.joinCliArguments = joinCliArguments;
-
+//# sourceMappingURL=utils.js.map
 
 /***/ }),
 
@@ -4678,7 +4678,7 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-const main_1 = __nccwpck_require__(399);
+const main_1 = __nccwpck_require__(1713);
 (0, main_1.main)();
 
 })();
