@@ -131,7 +131,7 @@ jobs:
 
       - name: Print Result
         run: |
-          echo "StringOutput=${{ steps.deploy.stringOutput }}"
-          echo "intOutput=${{ steps.deploy.intOutput }}"
-          echo "objectOutput=${{ steps.deploy.objectOutput }}"
-          echo "mySecret=${{ steps.deploy.mySecret }}"
+          echo "StringOutput=${{ steps.deploy.outputs.stringOutput }}"
+          echo "intOutput=${{ steps.deploy.outputs.intOutput }}"
+          echo "objectOutput=${{ steps.deploy.outputs.objectOutput }}"
+          echo "mySecret=${{ steps.deploy.outputs.mySecret }}"

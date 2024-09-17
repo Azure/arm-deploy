@@ -72,9 +72,11 @@ async function deploy(azPath: string, command: string, maskedOutputs: string[]|u
     );
   }
 
-  //core.debug(stdOut);
+  core.debug(stdOut);
   core.info("Parsing outputs...");
-  return getDeploymentResult(stdOut, maskedOutputs);
+  const result = getDeploymentResult(stdOut, maskedOutputs);
+  core.debug(stdOut);
+  return result
 }
 
 async function validate(
