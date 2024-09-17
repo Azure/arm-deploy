@@ -118,6 +118,7 @@ jobs:
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Run Action
+        id: deploy
         uses: ./
         with:
           scope: resourcegroup
@@ -127,3 +128,10 @@ jobs:
           deploymentName: e2e-test-${{ matrix.os }}
           maskedOutput: |
             mySecret
+
+      - name: Print Result
+        run: |
+          echo "StringOutput=${{ steps.deploy.stringOutput }}"
+          echo "intOutput=${{ steps.deploy.intOutput }}"
+          echo "objectOutput=${{ steps.deploy.objectOutput }}"
+          echo "mySecret=${{ steps.deploy.mySecret }}"
