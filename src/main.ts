@@ -4,6 +4,7 @@ import {
   getBooleanInput,
   info,
   getInput,
+  getMultilineInput,
   setFailed,
   setOutput,
 } from "@actions/core";
@@ -25,6 +26,7 @@ export type Options = {
   deploymentName: string;
   parameters?: string;
   additionalArguments?: string;
+  maskedOutputs?: string[];
   failOnStdErr: boolean;
 };
 
@@ -39,6 +41,7 @@ async function populateOptions(): Promise<Options> {
   const parameters = getInput("parameters");
   const managementGroupId = getInput("managementGroupId");
   const additionalArguments = getInput("additionalArguments");
+  const maskedOutputs = getMultilineInput("maskedOutputs");
   let failOnStdErr;
   try {
     failOnStdErr = getBooleanInput("failOnStdErr");
@@ -57,6 +60,7 @@ async function populateOptions(): Promise<Options> {
     parameters,
     managementGroupId,
     additionalArguments,
+    maskedOutputs,
     failOnStdErr,
   };
 }
@@ -79,6 +83,7 @@ export async function deploy(
     parameters,
     managementGroupId,
     additionalArguments,
+    maskedOutputs,
     failOnStdErr,
   } = options;
 
@@ -103,6 +108,7 @@ export async function deploy(
         deploymentName,
         parameters,
         failOnStdErr,
+        maskedOutputs,
         additionalArguments,
       );
 
@@ -115,6 +121,7 @@ export async function deploy(
         deploymentName,
         parameters,
         failOnStdErr,
+        maskedOutputs,
         additionalArguments,
       );
 
@@ -128,6 +135,7 @@ export async function deploy(
         parameters,
         managementGroupId,
         failOnStdErr,
+        maskedOutputs,
         additionalArguments,
       );
 
@@ -140,6 +148,7 @@ export async function deploy(
         deploymentName,
         parameters,
         failOnStdErr,
+        maskedOutputs,
         additionalArguments,
       );
 

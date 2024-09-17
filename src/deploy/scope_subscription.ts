@@ -12,6 +12,7 @@ export async function deploySubscriptionScope(
   deploymentName: string,
   parameters: string | undefined,
   failOnStdErr: boolean,
+  maskedOutputs: string[] | undefined,
   additionalArguments: string | undefined,
 ): Promise<DeploymentResult | undefined> {
   // Check if region is set
@@ -55,6 +56,7 @@ export async function deploySubscriptionScope(
     core.info("Creating deployment...");
     return await azCli.deploy(
       `deployment sub create ${azDeployParameters} -o json`,
+      maskedOutputs,
       failOnStdErr,
     );
   }

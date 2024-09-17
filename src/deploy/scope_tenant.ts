@@ -12,6 +12,7 @@ export async function deployTenantScope(
   deploymentName: string,
   parameters: string | undefined,
   failOnStdErr: boolean,
+  maskedOutputs: string[] | undefined,
   additionalArguments: string | undefined,
 ): Promise<DeploymentResult | undefined> {
   // Check if region is set
@@ -54,6 +55,7 @@ export async function deployTenantScope(
     core.info("Creating deployment...");
     return await azCli.deploy(
       `deployment tenant create ${azDeployParameters} -o json`,
+      maskedOutputs,
       failOnStdErr,
     );
   }

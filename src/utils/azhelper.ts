@@ -36,7 +36,7 @@ async function resourceGroupExists(azPath: string, resourceGroupName: string) {
   return exitCode === 0;
 }
 
-async function deploy(azPath: string, command: string, failOnStdErr: boolean) {
+async function deploy(azPath: string, command: string, maskedOutputs: string[]|undefined, failOnStdErr: boolean) {
   let hasStdErr = false;
   let stdOut = "";
   const options: ExecOptions = {
@@ -72,9 +72,9 @@ async function deploy(azPath: string, command: string, failOnStdErr: boolean) {
     );
   }
 
-  core.debug(stdOut);
+  //core.debug(stdOut);
   core.info("Parsing outputs...");
-  return getDeploymentResult(stdOut);
+  return getDeploymentResult(stdOut, maskedOutputs);
 }
 
 async function validate(

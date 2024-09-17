@@ -13,6 +13,7 @@ export async function deployManagementGroupScope(
   parameters: string | undefined,
   managementGroupId: string,
   failOnStdErr: boolean,
+  maskedOutputs: string[] | undefined,
   additionalArguments: string | undefined,
 ): Promise<DeploymentResult | undefined> {
   // Check if region is set
@@ -59,6 +60,7 @@ export async function deployManagementGroupScope(
     core.info("Creating deployment...");
     return await azCli.deploy(
       `deployment mg create ${azDeployParameters} -o json`,
+      maskedOutputs,
       failOnStdErr,
     );
   }
