@@ -4309,6 +4309,7 @@ function deploy(options) {
             (0, core_1.info)("Changing subscription context...");
             yield azCli.setSubscriptionContext(subscriptionId);
         }
+        (0, core_1.info)("options: " + JSON.stringify(options));
         // Run the Deployment
         switch (scope) {
             case "resourcegroup":
