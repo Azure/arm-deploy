@@ -4309,7 +4309,6 @@ function deploy(options) {
             (0, core_1.info)("Changing subscription context...");
             yield azCli.setSubscriptionContext(subscriptionId);
         }
-        (0, core_1.info)("options: " + JSON.stringify(options));
         // Run the Deployment
         switch (scope) {
             case "resourcegroup":
@@ -4454,9 +4453,10 @@ function deploy(azPath, command, maskedOutputs, failOnStdErr) {
         if (hasStdErr && failOnStdErr) {
             throw new Error("Deployment process failed as some lines were written to stderr");
         }
-        core.debug(stdOut);
         core.info("Parsing outputs...");
+        // getDeploymentResult handles the secret masking
         const result = (0, utils_1.getDeploymentResult)(stdOut, maskedOutputs);
+        // print stdOut only after secret masking
         core.debug(stdOut);
         return result;
     });
@@ -4505,15 +4505,12 @@ function getDeploymentResult(commandOutput, maskedOutputs) {
     const outputs = {};
     try {
         const parsed = JSON.parse(commandOutput);
-        (0, core_1.warning)("try register secret for keys: " + maskedOutputs);
+        (0, core_1.debug)("registering secrets for keys: " + maskedOutputs);
         for (const key in parsed.properties.outputs) {
             const maskedValue = parsed.properties.outputs[key].value;
             if (maskedOutputs && maskedOutputs.some(maskedKey => maskedKey === key)) {
-                (0, core_1.warning)("secret key matched for " + key);
                 (0, core_1.setSecret)(JSON.stringify(maskedValue));
-            }
-            else {
-                (0, core_1.warning)("no match for: " + key);
+                (0, core_1.debug)("registered output value as secret for key: " + key);
             }
             outputs[key] = maskedValue;
         }
