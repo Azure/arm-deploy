@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { warning, setSecret } from "@actions/core";
+import { debug, setSecret } from "@actions/core";
 
 export type DeploymentResult = {
   outputs: Record<string, unknown>;
@@ -21,14 +21,12 @@ export function getDeploymentResult(commandOutput: string, maskedOutputs: string
       };
     };
 
-    warning("try register secret for keys: " + maskedOutputs);
+    debug("registering secrets for keys: " + maskedOutputs);
     for (const key in parsed.properties.outputs) {
       const maskedValue = parsed.properties.outputs[key].value;
       if (maskedOutputs && maskedOutputs.some(maskedKey => maskedKey === key)) {
-        warning("secret key matched for " + key);
         setSecret(JSON.stringify(maskedValue));
-      } else {
-        warning("no match for: " + key);
+        debug("registered output value as secret for key: " + key);
       }
       outputs[key] = maskedValue;
     }

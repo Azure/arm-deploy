@@ -72,9 +72,10 @@ async function deploy(azPath: string, command: string, maskedOutputs: string[]|u
     );
   }
 
-  core.debug(stdOut);
   core.info("Parsing outputs...");
+  // getDeploymentResult handles the secret masking
   const result = getDeploymentResult(stdOut, maskedOutputs);
+  // print stdOut only after secret masking
   core.debug(stdOut);
   return result
 }
