@@ -97,6 +97,8 @@ export async function deploy(
     await azCli.setSubscriptionContext(subscriptionId);
   }
 
+  info("options: " + JSON.stringify(options));
+
   // Run the Deployment
   switch (scope) {
     case "resourcegroup":
