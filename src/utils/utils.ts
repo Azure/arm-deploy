@@ -21,11 +21,14 @@ export function getDeploymentResult(commandOutput: string, maskedOutputs: string
       };
     };
 
+    warning("try register secret for keys: " + maskedOutputs);
     for (const key in parsed.properties.outputs) {
       const maskedValue = parsed.properties.outputs[key].value;
       if (maskedOutputs && maskedOutputs.some(maskedKey => maskedKey === key)) {
         warning("secret key matched for " + key);
         setSecret(JSON.stringify(maskedValue));
+      } else {
+        warning("no match for: " + key);
       }
       outputs[key] = maskedValue;
     }
