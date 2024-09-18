@@ -23,7 +23,7 @@ export function getDeploymentResult(commandOutput: string, maskedOutputs: string
 
     for (const key in parsed.properties.outputs) {
       const maskedValue = parsed.properties.outputs[key].value;
-      if (maskedOutputs && maskedOutputs.includes(key)) {
+      if (maskedOutputs && maskedOutputs.some(maskedKey => maskedKey === key)) {
         warning("secret key matched for " + key);
         setSecret(JSON.stringify(maskedValue));
       }
