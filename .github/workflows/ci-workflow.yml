@@ -136,4 +136,4 @@ jobs:
           echo "objectOutput=${{ steps.deploy.outputs.objectOutput }}"
           echo "myServerIP=${{ steps.deploy.outputs.myServerIP }}"
           # myServerIP is register as secret, it can still be accessed, just won't print in raw form.
-          echo "myServerIPEncoded=$(echo ${{ steps.deploy.outputs.myServerIP }} | base64)""
+          echo "myServerIPEncoded=$(echo ${{ steps.deploy.outputs.myServerIP }} | base64)"
