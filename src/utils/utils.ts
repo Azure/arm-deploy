@@ -22,9 +22,9 @@ export function getDeploymentResult(commandOutput: string, maskedOutputs: string
     };
 
     for (const key in parsed.properties.outputs) {
-      const maskedValue = parsed.properties.outputs[key].value;
+      const maskedValue = parsed.properties.outputs[key].value.toString();
       if (maskedOutputs && maskedOutputs.includes(key)) {
-        setSecret(maskedValue.toString());
+        setSecret(maskedValue);
       }
       outputs[key] = maskedValue;
     }
