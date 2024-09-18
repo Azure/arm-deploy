@@ -35,7 +35,7 @@ inputs:
   additionalArguments:
     description: "Specify any additional arguments for the deployment."
     required: false
-  maskedOutput:
+  maskedOutputs:
     description: "Specify any out put need to set as secret, so github action log won't print them out."
     required: false
 branding:

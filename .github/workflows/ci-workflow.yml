@@ -126,7 +126,7 @@ jobs:
           resourceGroupName: arm-deploy-e2e
           parameters: test/bicep/inputs-outputs.bicepparam
           deploymentName: e2e-test-${{ matrix.os }}
-          maskedOutput: |
+          maskedOutputs: |
             mySecret
 
       - name: Print Result
