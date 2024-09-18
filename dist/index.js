@@ -4504,11 +4504,15 @@ function getDeploymentResult(commandOutput, maskedOutputs) {
     const outputs = {};
     try {
         const parsed = JSON.parse(commandOutput);
+        (0, core_1.warning)("try register secret for keys: " + maskedOutputs);
         for (const key in parsed.properties.outputs) {
             const maskedValue = parsed.properties.outputs[key].value;
             if (maskedOutputs && maskedOutputs.some(maskedKey => maskedKey === key)) {
                 (0, core_1.warning)("secret key matched for " + key);
                 (0, core_1.setSecret)(JSON.stringify(maskedValue));
+            }
+            else {
+                (0, core_1.warning)("no match for: " + key);
             }
             outputs[key] = maskedValue;
         }
