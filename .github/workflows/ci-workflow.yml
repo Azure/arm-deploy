@@ -127,11 +127,13 @@ jobs:
           parameters: test/bicep/inputs-outputs.bicepparam
           deploymentName: e2e-test-${{ matrix.os }}
           maskedOutputs: |
-            mySecret
+            myServerIP
 
       - name: Print Result
         run: |
           echo "StringOutput=${{ steps.deploy.outputs.stringOutput }}"
           echo "intOutput=${{ steps.deploy.outputs.intOutput }}"
           echo "objectOutput=${{ steps.deploy.outputs.objectOutput }}"
-          echo "mySecret=${{ steps.deploy.outputs.mySecret }}"
+          echo "myServerIP=${{ steps.deploy.outputs.myServerIP }}"
+          # myServerIP is register as secret, it can still be accessed, just won't print in raw form.
+          echo "myServerIPEncoded=$(echo ${{ steps.deploy.outputs.myServerIP }} | base64)""
