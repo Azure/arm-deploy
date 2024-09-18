@@ -4506,7 +4506,7 @@ function getDeploymentResult(commandOutput, maskedOutputs) {
         const parsed = JSON.parse(commandOutput);
         for (const key in parsed.properties.outputs) {
             const maskedValue = parsed.properties.outputs[key].value;
-            if (maskedOutputs && maskedOutputs.includes(key)) {
+            if (maskedOutputs && maskedOutputs.some(maskedKey => maskedKey === key)) {
                 (0, core_1.warning)("secret key matched for " + key);
                 (0, core_1.setSecret)(JSON.stringify(maskedValue));
             }
