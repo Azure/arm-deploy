@@ -3957,7 +3957,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deployManagementGroupScope = void 0;
+exports.deployManagementGroupScope = deployManagementGroupScope;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
@@ -3994,7 +3994,6 @@ function deployManagementGroupScope(azCli, region, template, deploymentMode, dep
         }
     });
 }
-exports.deployManagementGroupScope = deployManagementGroupScope;
 
 
 /***/ }),
@@ -4037,7 +4036,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deployResourceGroupScope = void 0;
+exports.deployResourceGroupScope = deployResourceGroupScope;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
@@ -4075,7 +4074,6 @@ function deployResourceGroupScope(azCli, resourceGroupName, template, deployment
         }
     });
 }
-exports.deployResourceGroupScope = deployResourceGroupScope;
 
 
 /***/ }),
@@ -4118,7 +4116,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deploySubscriptionScope = void 0;
+exports.deploySubscriptionScope = deploySubscriptionScope;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
@@ -4153,7 +4151,6 @@ function deploySubscriptionScope(azCli, region, template, deploymentMode, deploy
         }
     });
 }
-exports.deploySubscriptionScope = deploySubscriptionScope;
 
 
 /***/ }),
@@ -4196,7 +4193,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deployTenantScope = void 0;
+exports.deployTenantScope = deployTenantScope;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
@@ -4231,7 +4228,6 @@ function deployTenantScope(azCli, region, template, deploymentMode, deploymentNa
         }
     });
 }
-exports.deployTenantScope = deployTenantScope;
 
 
 /***/ }),
@@ -4251,7 +4247,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.main = exports.deploy = void 0;
+exports.deploy = deploy;
+exports.main = main;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core_1 = __nccwpck_require__(2186);
@@ -4324,7 +4321,6 @@ function deploy(options) {
         }
     });
 }
-exports.deploy = deploy;
 // Action Main code
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -4342,7 +4338,6 @@ function main() {
         }
     });
 }
-exports.main = main;
 
 
 /***/ }),
@@ -4385,7 +4380,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getAzCliHelper = exports.AzCliHelper = void 0;
+exports.AzCliHelper = void 0;
+exports.getAzCliHelper = getAzCliHelper;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const exec_1 = __nccwpck_require__(1514);
@@ -4408,7 +4404,6 @@ function getAzCliHelper() {
         return new AzCliHelper(azPath);
     });
 }
-exports.getAzCliHelper = getAzCliHelper;
 function setSubscriptionContext(azPath, subscriptionId) {
     return __awaiter(this, void 0, void 0, function* () {
         yield callAzCli(azPath, `account set --subscription ${subscriptionId}`, {
@@ -4498,7 +4493,8 @@ function callAzCli(azPath, command, options) {
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.joinCliArguments = exports.getDeploymentResult = void 0;
+exports.getDeploymentResult = getDeploymentResult;
+exports.joinCliArguments = joinCliArguments;
 const core_1 = __nccwpck_require__(2186);
 function getDeploymentResult(commandOutput, maskedOutputs) {
     // parse the result and save the outputs
@@ -4522,11 +4518,9 @@ function getDeploymentResult(commandOutput, maskedOutputs) {
         outputs,
     };
 }
-exports.getDeploymentResult = getDeploymentResult;
 function joinCliArguments(...args) {
     return args.filter(Boolean).join(" ");
 }
-exports.joinCliArguments = joinCliArguments;
 
 
 /***/ }),
