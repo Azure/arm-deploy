@@ -6,6 +6,7 @@ export const coreMock = {
   setOutput: jest.fn(),
   getBooleanInput: jest.fn(),
   getInput: jest.fn(),
+  getMultilineInput: jest.fn(),
   error: jest.fn(),
   warning: jest.fn(),
   info: jest.fn(),
