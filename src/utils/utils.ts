@@ -1,11 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+import { debug, setSecret } from "@actions/core";
+
 export type DeploymentResult = {
   outputs: Record<string, unknown>;
 };
 
-export function getDeploymentResult(commandOutput: string): DeploymentResult {
+export function getDeploymentResult(commandOutput: string, maskedOutputs: string[]|undefined): DeploymentResult {
   // parse the result and save the outputs
   const outputs: Record<string, unknown> = {};
   try {
@@ -13,14 +15,20 @@ export function getDeploymentResult(commandOutput: string): DeploymentResult {
       properties: {
         outputs: {
           [index: string]: {
-            value: unknown;
+            value: any;
           };
         };
       };
     };
 
+    debug("registering secrets for keys: " + maskedOutputs);
     for (const key in parsed.properties.outputs) {
-      outputs[key] = parsed.properties.outputs[key].value;
+      const maskedValue = parsed.properties.outputs[key].value;
+      if (maskedOutputs && maskedOutputs.some(maskedKey => maskedKey === key)) {
+        setSecret(JSON.stringify(maskedValue));
+        debug("registered output value as secret for key: " + key);
+      }
+      outputs[key] = maskedValue;
     }
   } catch (err) {
     console.error(commandOutput);

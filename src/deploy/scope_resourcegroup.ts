@@ -12,6 +12,7 @@ export async function deployResourceGroupScope(
   deploymentName: string,
   parameters: string | undefined,
   failOnStdErr: boolean,
+  maskedOutputs: string[] | undefined,
   additionalArguments: string | undefined,
 ): Promise<DeploymentResult | undefined> {
   // Check if resourceGroupName is set
@@ -57,6 +58,7 @@ export async function deployResourceGroupScope(
     core.info("Creating deployment...");
     return await azCli.deploy(
       `deployment group create ${azDeployParameters} -o json`,
+      maskedOutputs,
       failOnStdErr,
     );
   }
