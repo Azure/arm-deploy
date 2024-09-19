@@ -27,7 +27,7 @@ jobs:
         with:
           languages: javascript
 
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
@@ -75,7 +75,7 @@ jobs:
            echo "$CWD/oidc-venv/bin" >> $GITHUB_PATH
            az --version
 
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
@@ -111,7 +111,7 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v4
 
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
