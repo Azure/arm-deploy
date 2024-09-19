@@ -118,6 +118,7 @@ jobs:
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Run Action
+        id: deploy
         uses: ./
         with:
           scope: resourcegroup
@@ -125,3 +126,14 @@ jobs:
           resourceGroupName: arm-deploy-e2e
           parameters: test/bicep/inputs-outputs.bicepparam
           deploymentName: e2e-test-${{ matrix.os }}
+          maskedOutputs: |
+            myServerIP
+
+      - name: Print Result
+        run: |
+          echo "StringOutput=${{ steps.deploy.outputs.stringOutput }}"
+          echo "intOutput=${{ steps.deploy.outputs.intOutput }}"
+          echo "objectOutput=${{ steps.deploy.outputs.objectOutput }}"
+          echo "myServerIP=${{ steps.deploy.outputs.myServerIP }}"
+          # myServerIP is register as secret, it can still be accessed, just won't print in raw form.
+          echo "myServerIPEncoded=$(echo ${{ steps.deploy.outputs.myServerIP }} | base64)"

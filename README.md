@@ -24,6 +24,7 @@ By default, the action only parses the output and does not print them out. In or
 * `deploymentName`: Specifies the name of the resource group deployment to create.
 * `failOnStdErr`: Specify whether to fail the action if some data is written to stderr stream of az cli. Valid values are: true, false. Default value set to true.
 * `additionalArguments`: Specify any additional arguments for the deployment. These arguments will be ignored while `validating` the template.
+* `maskedOutputs`: Specify list of output keys that its value need to be register to github action as secret. (checkout https://github.com/actions/toolkit/issues/184#issuecomment-1198653452 for valid multiline string)
 
   A good way to use additionalArguments would be to send optional parameters like `--what-if` or `--what-if-exclude-change-types`. [Read more about this here](https://docs.microsoft.com/en-us/cli/azure/deployment?view=azure-cli-latest#az-deployment-create-optional-parameters)
 ## Outputs

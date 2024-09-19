@@ -3957,12 +3957,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deployManagementGroupScope = void 0;
+exports.deployManagementGroupScope = deployManagementGroupScope;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
 const utils_1 = __nccwpck_require__(239);
-function deployManagementGroupScope(azCli, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, additionalArguments) {
+function deployManagementGroupScope(azCli, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, maskedOutputs, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if region is set
         if (!region) {
@@ -3990,11 +3990,10 @@ function deployManagementGroupScope(azCli, region, template, deploymentMode, dep
         if (deploymentMode != "validate") {
             // execute the deployment
             core.info("Creating deployment...");
-            return yield azCli.deploy(`deployment mg create ${azDeployParameters} -o json`, failOnStdErr);
+            return yield azCli.deploy(`deployment mg create ${azDeployParameters} -o json`, maskedOutputs, failOnStdErr);
         }
     });
 }
-exports.deployManagementGroupScope = deployManagementGroupScope;
 
 
 /***/ }),
@@ -4037,12 +4036,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deployResourceGroupScope = void 0;
+exports.deployResourceGroupScope = deployResourceGroupScope;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
 const utils_1 = __nccwpck_require__(239);
-function deployResourceGroupScope(azCli, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
+function deployResourceGroupScope(azCli, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, maskedOutputs, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if resourceGroupName is set
         if (!resourceGroupName) {
@@ -4071,11 +4070,10 @@ function deployResourceGroupScope(azCli, resourceGroupName, template, deployment
         if (deploymentMode != "validate") {
             // execute the deployment
             core.info("Creating deployment...");
-            return yield azCli.deploy(`deployment group create ${azDeployParameters} -o json`, failOnStdErr);
+            return yield azCli.deploy(`deployment group create ${azDeployParameters} -o json`, maskedOutputs, failOnStdErr);
         }
     });
 }
-exports.deployResourceGroupScope = deployResourceGroupScope;
 
 
 /***/ }),
@@ -4118,12 +4116,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deploySubscriptionScope = void 0;
+exports.deploySubscriptionScope = deploySubscriptionScope;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
 const utils_1 = __nccwpck_require__(239);
-function deploySubscriptionScope(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
+function deploySubscriptionScope(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, maskedOutputs, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if region is set
         if (!region) {
@@ -4149,11 +4147,10 @@ function deploySubscriptionScope(azCli, region, template, deploymentMode, deploy
         if (deploymentMode != "validate") {
             // execute the deployment
             core.info("Creating deployment...");
-            return yield azCli.deploy(`deployment sub create ${azDeployParameters} -o json`, failOnStdErr);
+            return yield azCli.deploy(`deployment sub create ${azDeployParameters} -o json`, maskedOutputs, failOnStdErr);
         }
     });
 }
-exports.deploySubscriptionScope = deploySubscriptionScope;
 
 
 /***/ }),
@@ -4196,12 +4193,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deployTenantScope = void 0;
+exports.deployTenantScope = deployTenantScope;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core = __importStar(__nccwpck_require__(2186));
 const utils_1 = __nccwpck_require__(239);
-function deployTenantScope(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments) {
+function deployTenantScope(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, maskedOutputs, additionalArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check if region is set
         if (!region) {
@@ -4227,11 +4224,10 @@ function deployTenantScope(azCli, region, template, deploymentMode, deploymentNa
         if (deploymentMode != "validate") {
             // execute the deployment
             core.info("Creating deployment...");
-            return yield azCli.deploy(`deployment tenant create ${azDeployParameters} -o json`, failOnStdErr);
+            return yield azCli.deploy(`deployment tenant create ${azDeployParameters} -o json`, maskedOutputs, failOnStdErr);
         }
     });
 }
-exports.deployTenantScope = deployTenantScope;
 
 
 /***/ }),
@@ -4251,7 +4247,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.main = exports.deploy = void 0;
+exports.deploy = deploy;
+exports.main = main;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const core_1 = __nccwpck_require__(2186);
@@ -4272,6 +4269,7 @@ function populateOptions() {
         const parameters = (0, core_1.getInput)("parameters");
         const managementGroupId = (0, core_1.getInput)("managementGroupId");
         const additionalArguments = (0, core_1.getInput)("additionalArguments");
+        const maskedOutputs = (0, core_1.getMultilineInput)("maskedOutputs");
         let failOnStdErr;
         try {
             failOnStdErr = (0, core_1.getBooleanInput)("failOnStdErr");
@@ -4290,6 +4288,7 @@ function populateOptions() {
             parameters,
             managementGroupId,
             additionalArguments,
+            maskedOutputs,
             failOnStdErr,
         };
     });
@@ -4299,7 +4298,7 @@ function deploy(options) {
         // determine az path
         const azCli = yield (0, azhelper_1.getAzCliHelper)();
         // retrieve action variables
-        const { scope, subscriptionId, region: region, resourceGroupName, template, deploymentMode, deploymentName, parameters, managementGroupId, additionalArguments, failOnStdErr, } = options;
+        const { scope, subscriptionId, region: region, resourceGroupName, template, deploymentMode, deploymentName, parameters, managementGroupId, additionalArguments, maskedOutputs, failOnStdErr, } = options;
         // change the subscription context
         if (scope !== "tenant" &&
             scope !== "managementgroup" &&
@@ -4310,19 +4309,18 @@ function deploy(options) {
         // Run the Deployment
         switch (scope) {
             case "resourcegroup":
-                return yield (0, scope_resourcegroup_1.deployResourceGroupScope)(azCli, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments);
+                return yield (0, scope_resourcegroup_1.deployResourceGroupScope)(azCli, resourceGroupName, template, deploymentMode, deploymentName, parameters, failOnStdErr, maskedOutputs, additionalArguments);
             case "tenant":
-                return yield (0, scope_tenant_1.deployTenantScope)(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments);
+                return yield (0, scope_tenant_1.deployTenantScope)(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, maskedOutputs, additionalArguments);
             case "managementgroup":
-                return yield (0, scope_managementgroup_1.deployManagementGroupScope)(azCli, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, additionalArguments);
+                return yield (0, scope_managementgroup_1.deployManagementGroupScope)(azCli, region, template, deploymentMode, deploymentName, parameters, managementGroupId, failOnStdErr, maskedOutputs, additionalArguments);
             case "subscription":
-                return yield (0, scope_subscription_1.deploySubscriptionScope)(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, additionalArguments);
+                return yield (0, scope_subscription_1.deploySubscriptionScope)(azCli, region, template, deploymentMode, deploymentName, parameters, failOnStdErr, maskedOutputs, additionalArguments);
             default:
                 throw new Error("Invalid scope. Valid values are: 'resourcegroup', 'tenant', 'managementgroup', 'subscription'");
         }
     });
 }
-exports.deploy = deploy;
 // Action Main code
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -4340,7 +4338,6 @@ function main() {
         }
     });
 }
-exports.main = main;
 
 
 /***/ }),
@@ -4383,7 +4380,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getAzCliHelper = exports.AzCliHelper = void 0;
+exports.AzCliHelper = void 0;
+exports.getAzCliHelper = getAzCliHelper;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 const exec_1 = __nccwpck_require__(1514);
@@ -4406,7 +4404,6 @@ function getAzCliHelper() {
         return new AzCliHelper(azPath);
     });
 }
-exports.getAzCliHelper = getAzCliHelper;
 function setSubscriptionContext(azPath, subscriptionId) {
     return __awaiter(this, void 0, void 0, function* () {
         yield callAzCli(azPath, `account set --subscription ${subscriptionId}`, {
@@ -4420,7 +4417,7 @@ function resourceGroupExists(azPath, resourceGroupName) {
         return exitCode === 0;
     });
 }
-function deploy(azPath, command, failOnStdErr) {
+function deploy(azPath, command, maskedOutputs, failOnStdErr) {
     return __awaiter(this, void 0, void 0, function* () {
         let hasStdErr = false;
         let stdOut = "";
@@ -4451,9 +4448,12 @@ function deploy(azPath, command, failOnStdErr) {
         if (hasStdErr && failOnStdErr) {
             throw new Error("Deployment process failed as some lines were written to stderr");
         }
-        core.debug(stdOut);
         core.info("Parsing outputs...");
-        return (0, utils_1.getDeploymentResult)(stdOut);
+        // getDeploymentResult handles the secret masking
+        const result = (0, utils_1.getDeploymentResult)(stdOut, maskedOutputs);
+        // print stdOut only after secret masking
+        core.debug(stdOut);
+        return result;
     });
 }
 function validate(azPath, command, failOnNonZeroExit) {
@@ -4486,21 +4486,29 @@ function callAzCli(azPath, command, options) {
 /***/ }),
 
 /***/ 239:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.joinCliArguments = exports.getDeploymentResult = void 0;
-function getDeploymentResult(commandOutput) {
+exports.getDeploymentResult = getDeploymentResult;
+exports.joinCliArguments = joinCliArguments;
+const core_1 = __nccwpck_require__(2186);
+function getDeploymentResult(commandOutput, maskedOutputs) {
     // parse the result and save the outputs
     const outputs = {};
     try {
         const parsed = JSON.parse(commandOutput);
+        (0, core_1.debug)("registering secrets for keys: " + maskedOutputs);
         for (const key in parsed.properties.outputs) {
-            outputs[key] = parsed.properties.outputs[key].value;
+            const maskedValue = parsed.properties.outputs[key].value;
+            if (maskedOutputs && maskedOutputs.some(maskedKey => maskedKey === key)) {
+                (0, core_1.setSecret)(JSON.stringify(maskedValue));
+                (0, core_1.debug)("registered output value as secret for key: " + key);
+            }
+            outputs[key] = maskedValue;
         }
     }
     catch (err) {
@@ -4510,11 +4518,9 @@ function getDeploymentResult(commandOutput) {
         outputs,
     };
 }
-exports.getDeploymentResult = getDeploymentResult;
 function joinCliArguments(...args) {
     return args.filter(Boolean).join(" ");
 }
-exports.joinCliArguments = joinCliArguments;
 
 
 /***/ }),

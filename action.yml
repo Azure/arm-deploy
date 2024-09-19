@@ -35,6 +35,9 @@ inputs:
   additionalArguments:
     description: "Specify any additional arguments for the deployment."
     required: false
+  maskedOutputs:
+    description: "Specify list of output keys that its value need to be register to github action as secret. (checkout https://github.com/actions/toolkit/issues/184#issuecomment-1198653452 for valid multiline string)"
+    required: false
 branding:
   color: orange
   icon: package
