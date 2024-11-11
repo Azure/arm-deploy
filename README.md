@@ -1,5 +1,11 @@
 # GitHub Action for Azure Resource Manager (ARM) deployment
 
+> 🚀 **New Release Alert!**  
+> We are excited to announce a new implementation of our GitHub Action for Azure Resource Manager (ARM) deployments! To improve the deployment and management of Azure resources, we’ve launched [azure/bicep-deploy](https://github.com/azure/bicep-deploy), which supports both Bicep and ARM templates, along with first-party Deployment Stacks support, making it easier than ever to manage your infrastructure directly from GitHub workflows.
+>  
+> ⚠️ **Deprecation Notice:** This repository and action (azure/arm-deploy) will be **deprecated in the future**. We recommend switching to [azure/bicep-deploy](https://github.com/azure/bicep-deploy) for ongoing support and new features.
+> 
+
 A GitHub Action to deploy ARM templates. With this action you can automate your workflow to deploy ARM templates and manage Azure resources.
 
 This action can be used to deploy Azure Resource Manager templates at different [deployment scopes](https://docs.microsoft.com/bs-latn-ba/Azure/azure-resource-manager/resource-group-template-deploy-rest#deployment-scope) -  resource group deployment scope, subscription deployment scope and management group deployment scopes. 
